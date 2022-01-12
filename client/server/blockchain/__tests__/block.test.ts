@@ -1,59 +1,79 @@
-import fs from "fs"
 import {Block, BlockHeader} from "../block"
+import Blockchain from "../blockchain"
 
-// Block class 테스트
-describe("Block class", () => {
+/**
+ * 새로 생성된 블록에 대한 테스트 진행 
+*/ 
+describe("NewBlock test", () => {
   let data: object[],
     blockchain: Block[],
     lastBlock: Block,
-		block: Block;
+		newBlock: Block;
   beforeEach(() => {
     data = [{data: "test"}];
-    blockchain = Block.blockchain;
-    lastBlock = Block.getLastBlock();
-    block = Block.mineNewBlock(lastBlock, data);
+    blockchain = new Blockchain().chain;
+    lastBlock = new Blockchain().getLastBlock();
+    newBlock = Block.mineNewBlock(lastBlock, data);
   })
 
-  test("Block structure validation", ()=>{
-    expect(typeof block.hash).toBe("string");
-    expect(typeof block.header.version).toBe("string");
-    expect(typeof block.header.index).toBe("number");
-    expect(typeof block.header.prevHash).toBe("string");
-    expect(typeof block.header.merkleRoot).toBe("string");
-    expect(typeof block.header.timestamp).toBe("number");
-    expect(typeof block.header.difficulty).toBe("number");
-    expect(typeof block.header.nonce).toBe("number");
+  // newBlock 요소들의 타입 테스트
+  test("newBlock structure validation", ()=>{
+    expect(typeof newBlock.hash).toBe("string");
+    expect(typeof newBlock.header.version).toBe("string");
+    expect(typeof newBlock.header.index).toBe("number");
+    expect(typeof newBlock.header.prevHash).toBe("string");
+    expect(typeof newBlock.header.merkleRoot).toBe("string");
+    expect(typeof newBlock.header.timestamp).toBe("number");
+    expect(typeof newBlock.header.difficulty).toBe("number");
+    expect(typeof newBlock.header.nonce).toBe("number");
   })
   
-  // getVersion 함수 테스트
-  test("current version validation", () => {
-    const version: string = lastBlock.header.version;
-    const expectedVersion: string = JSON.parse(fs.readFileSync("package.json", "utf8")).version
+  // newBlock의 version 테스트
+  test("newBlock's version validation", () => {
+    const version: string = newBlock.header.version;
+    const expectedVersion: string = Block.getVersion();
     expect(version).toBe(expectedVersion)
   })
-  
-  // getGenesisBlock 함수 테스트
-  test("genesis Block validation", () => {
-    const genesisBlock = Block.getGenesisBlock();
-    expect(genesisBlock.header.version).toBe(Block.getVersion())
-    expect(genesisBlock.header.index).toBe(0);
-    expect(genesisBlock.hash).toBe(Block.calHashofBlock(genesisBlock.header))
-  })
-  
-  // blockchain 테스트
-  test("blockchain validation", () => {
-    const expectedGenesisBlock = Block.getGenesisBlock();
-    const expectedLastBlock = Block.getLastBlock()
-    const firstBlock = Block.blockchain[0];
-    const lastBlock = Block.blockchain[Block.blockchain.length-1];
-    expect(typeof Block.blockchain).toBe("object");
-    expect(expectedGenesisBlock).toEqual(firstBlock);
-    expect(expectedLastBlock).toEqual(lastBlock);
-  })
+
 
   // 새로운 블록이 올바른 블록인지 테스트
   test("mineNewBlock validation", () => {
-    const newBlock = Block.mineNewBlock(lastBlock, data);
     expect(newBlock.header.prevHash).toBe(lastBlock.hash);
+    expect(newBlock.hash.startsWith("0".repeat(newBlock.header.difficulty))).toBeTruthy()
+  })
+
+  // difficulty 변화 테스트
+  describe("adjust difficulty when creating new block", () => {
+    function getTestBlock (prevTimestamp: number, currentTimestamp: number, currentIndex: number): number {
+      const testHeader = new BlockHeader ("version", currentIndex, "hash", "merkleRoot", prevTimestamp, 3, 0)
+      const testBlock = new Block(testHeader, Block.calHashOfBlock(testHeader), []);
+      const difficulty = Block.adjustDifficulty(testBlock, currentTimestamp)
+      return difficulty;
+    }
+    let testBlockDifficulty:number;
+    beforeAll(()=> {
+      testBlockDifficulty = 3;
+    })
+    
+    test("takes more than MINE_INTERVAL*2, decrease difficulty", () => {
+      
+      const difficulty = getTestBlock(0, 201, 10)
+      expect(difficulty).toBe(testBlockDifficulty-1)
+    })
+
+    test("takes less than MINE_INTERVAL/2, increase difficulty", () => {
+      const difficulty = getTestBlock(0, 49, 10)
+      expect(difficulty).toBe(testBlockDifficulty+1)
+    })
+
+    test("takes time between MINE_INTERVAL/2 and MINE_INTERVAL*2, no change difficulty", () => {
+      const difficulty = getTestBlock(0, 50, 10)
+      expect(difficulty).toBe(testBlockDifficulty)
+    })
+
+    test("Although it meets conditions of MINE_INTERVAL, if index doesn't meet BLOCK_GENERATION_INTERVAL, no change difficulty", () => {
+      const difficulty = getTestBlock(0, 201, 3)
+      expect(difficulty).toBe(testBlockDifficulty)
+    })
   })
 })
