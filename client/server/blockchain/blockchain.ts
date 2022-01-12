@@ -99,6 +99,22 @@ export default class Blockchain {
                 return false;
             }
         }
+
+        return true;
+    }
+    replaceChain(newBlocks: Block[]): boolean {
+        if (newBlocks.length <= this.chain.length) {
+            console.log(
+                "No need to replace : New chain is shorter than current one"
+            );
+            return false;
+        }
+        if (!Blockchain.isValidChain(newBlocks)) {
+            console.log("No need to replace : New chain is invalid");
+            return false;
+        }
+        this.chain = newBlocks;
+        console.log("Replace current chain with new one");
         return true;
     }
 }
