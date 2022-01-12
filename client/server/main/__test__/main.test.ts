@@ -18,6 +18,5 @@ describe("[GET] /blocks", () => {
     test("should response blockchain", async () => {
         const res = await request(app).get("/blocks");
         expect(res.statusCode).toBe(200);
-        //expect(res.body.)
     });
 });

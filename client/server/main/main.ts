@@ -1,6 +1,7 @@
 import bodyParser from "body-parser";
 import express, { Request, Response } from "express";
 import "dotenv/config";
+import Blockchain from "../blockchain/blockchain";
 
 const app = express();
 
@@ -15,14 +16,15 @@ const initHttpServer = (port: number) => {
     });
 
     app.get("/blocks", (req: Request, res: Response) => {
-        //res.send(getBlockchain());
+        const bc = new Blockchain().chain;
+        res.send(bc);
     });
 };
 
 const server = app.listen(http_port, () => {
     console.log(`
     ####################################
-    🛡️  Server listening on port: 1234🛡️
+    🛡️  Server listening on port: 3001🛡️
     ####################################`);
 });
 
