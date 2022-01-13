@@ -1,0 +1,13 @@
+a{
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.55);
+  padding: 8px 8px;
+}
+a:hover {
+  color: rgba(255, 255, 255, 1);
+}
+.main-contents-container{
+  margin: auto;
+  margin-top: 20px;
+  max-width: 50vw;
+}
