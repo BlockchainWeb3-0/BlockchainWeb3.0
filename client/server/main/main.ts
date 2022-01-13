@@ -4,6 +4,7 @@ import "dotenv/config";
 import Blockchain from "../blockchain/blockchain";
 import { initP2PServer, getSockets, connectToPeers } from "../p2p/p2p";
 import Block from "../blockchain/block";
+import {cors} from "./cors"
 
 const blockchain: Blockchain = new Blockchain();
 
@@ -20,7 +21,7 @@ export const p2p_port: number =
 
 const initHttpServer = (port: number) => {
     app.use(bodyParser.json());
-
+    app.use(cors);
     app.get("/", (req: Request, res: Response) => {
         res.send("welcome!");
     });
