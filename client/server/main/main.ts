@@ -1,13 +1,21 @@
 import bodyParser from "body-parser";
 import express, { Request, Response } from "express";
+import helmet from "helmet";
 import "dotenv/config";
+
 import Blockchain from "../blockchain/blockchain";
 import { initP2PServer, getSockets, connectToPeers } from "../p2p/p2p";
-import Block from "../blockchain/block";
+import user from "./routes/user";
 
 const blockchain: Blockchain = new Blockchain();
 
 const app = express();
+app.use(helmet());
+app.disable("x-powered-by");
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use("/api/user", user);
 
 export const http_port: number =
     parseInt(process.env.HTTP_PORT as string) || 3001;
