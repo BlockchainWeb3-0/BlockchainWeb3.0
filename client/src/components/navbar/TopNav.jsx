@@ -9,7 +9,7 @@ function TopNav() {
     <>
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
 				<Container>
-					<Navbar.Brand href="#home">Spider Coin 🕷</Navbar.Brand>
+					<Navbar.Brand href="/">Spider Coin 🕷</Navbar.Brand>
 					<Navbar.Toggle aria-controls="responsive-navbar-nav" />
 					<Navbar.Collapse id="responsive-navbar-nav">
 						<Nav className="me-auto">
@@ -28,8 +28,6 @@ function TopNav() {
 					</Navbar.Collapse>
 				</Container>
 			</Navbar>
-      {/* <Link to="/sign">test</Link> */}
-
     </>
   )
 }
