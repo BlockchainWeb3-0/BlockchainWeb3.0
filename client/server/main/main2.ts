@@ -3,19 +3,14 @@ import express, { Request, Response } from "express";
 import "dotenv/config";
 import Blockchain from "../blockchain/blockchain";
 import { initP2PServer, getSockets, connectToPeers } from "../p2p/p2p";
-import Block from "../blockchain/block";
-
-const blockchain: Blockchain = new Blockchain();
 
 const app = express();
 
-export const http_port: number =
-    parseInt(process.env.HTTP_PORT as string) || 3001;
+export const http_port: number = 3002;
 
 ////////////////////////////////////////
 // 최현석 P2P Test
-export const p2p_port: number =
-    parseInt(process.env.P2P_PORT as string) || 6001;
+export const p2p_port: number = 6002;
 ////////////////////////////////////////
 
 const initHttpServer = (port: number) => {
@@ -25,18 +20,10 @@ const initHttpServer = (port: number) => {
         res.send("welcome!");
     });
 
-    app.get("/balance", (req, res) => {});
-
-    app.get("/blocks", (request, response) => {
-        response.json(blockchain.chain);
+    app.get("/blocks", (req: Request, res: Response) => {
+        const bc = new Blockchain().chain;
+        res.send(bc);
     });
-
-    app.get("/transactions", (req, res) => {
-        res.send("");
-    });
-
-    app.get("/public-key", (request, response) => {});
-
     ////////////////////////////////////////
     // 최현석 P2P Test
     app.get("/peers", (req, res) => {
@@ -48,15 +35,6 @@ const initHttpServer = (port: number) => {
         res.send(sockInfo);
         //res.send(getSockets());
     });
-
-    app.post("/mineBlock", (req: Request, res: Response) => {
-        const data: any = req.body.data;
-        console.log("mineBlock", data);
-        blockchain.addBlock(data);
-        console.log(blockchain);
-        res.send("ok");
-    });
-
     app.post("/addPeer", (req: Request, res: Response) => {
         const data: string[] = req.body.data;
         connectToPeers(data);
