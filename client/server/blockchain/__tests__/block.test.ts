@@ -1,3 +1,4 @@
+import merkle from "merkle";
 import {Block, BlockHeader} from "../block"
 import Blockchain from "../blockchain"
 
@@ -10,7 +11,7 @@ describe("NewBlock test", () => {
     lastBlock: Block,
 		newBlock: Block;
   beforeEach(() => {
-    data = [{data: "test"}];
+    data = [{data: "test"}, {asdf: "asdf"}];
     blockchain = new Blockchain().chain;
     lastBlock = new Blockchain().getLastBlock();
     newBlock = Block.mineNewBlock(lastBlock, data);
@@ -40,6 +41,20 @@ describe("NewBlock test", () => {
   test("mineNewBlock validation", () => {
     expect(newBlock.header.prevHash).toBe(lastBlock.hash);
     expect(newBlock.hash.startsWith("0".repeat(newBlock.header.difficulty))).toBeTruthy()
+  })
+  test("compare merkleRoot to calculated one => same", ()=>{
+    const calMerkleRoot = merkle("sha256").sync([JSON.stringify(newBlock.data)]).root();
+    expect(newBlock.header.merkleRoot).toEqual(calMerkleRoot);
+  })
+  test("remove orginal data and compare to merkleRoot => invalid data", ()=>{
+    newBlock.data = [{hacked : "corrupted"}]
+    const calCorruptedMerkleRoot = merkle("sha256").sync(newBlock.data).root();    
+    expect(newBlock.header.merkleRoot).not.toEqual(calCorruptedMerkleRoot);
+  })
+  test("corrupt orginal data and compare to merkleRoot => invalid data", ()=>{
+    newBlock.data = [{hacked : "corrupted"}, {asdf:"asdf"}]
+    const calCorruptedMerkleRoot = merkle("sha256").sync(newBlock.data).root();    
+    expect(newBlock.header.merkleRoot).not.toEqual(calCorruptedMerkleRoot);
   })
 
   // difficulty 변화 테스트

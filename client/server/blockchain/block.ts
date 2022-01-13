@@ -55,7 +55,7 @@ export default class Block {
 			"0.1.0",
 			0,
 			"0".repeat(64),
-			merkle("sha256").sync(data).root() || "0".repeat(64),
+			merkle("sha256").sync([JSON.stringify(data)]).root() || "0".repeat(64),
 			1631006505,
 			config.INITIAL_DIFFICULTY,
 			0
@@ -69,7 +69,7 @@ export default class Block {
     const version = lastBlock.header.version;
 		const index = lastBlock.header.index + 1;
 		const prevHash: string = lastBlock.hash;
-		let merkleRoot = data.length ? merkle("sha256").sync(data).root() : "0".repeat(64);
+		let merkleRoot = data.length ? merkle("sha256").sync([JSON.stringify(data)]).root() : "0".repeat(64);
 		let timestamp: number = Math.round(Date.now()/1000);
 		let difficulty = this.adjustDifficulty(lastBlock, timestamp);
 		let nonce: number = 0;
