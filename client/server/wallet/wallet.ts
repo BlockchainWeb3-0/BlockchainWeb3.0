@@ -32,7 +32,6 @@ const generatePrivateKey = (): string => {
 };
 
 const initWallet = () => {
-  // let's not override existing private keys
   if (existsSync(privateKeyLocation)) {
     return;
   }
@@ -147,7 +146,6 @@ const createTransaction = (
 
   const myUnspentTxOuts = filterTxPoolTxs(myUnspentTxOutsA, txPool);
 
-  // filter from unspentOutputs such inputs that are referenced in pool
   const { includedUnspentTxOuts, leftOverAmount } = findTxOutsForAmount(
     amount,
     myUnspentTxOuts
