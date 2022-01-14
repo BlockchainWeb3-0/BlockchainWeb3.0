@@ -1,9 +1,6 @@
-import merkle from 'merkle';
+import merkle = require('merkle');
 import Block from './block';
 import * as config from '../config';
-import { getBalance, getPublicFromWallet } from '../wallet/wallet';
-import { processTransactions, UnspentTxOut } from '../transaction/transaction';
-import _ from 'lodash';
 
 export default class Blockchain {
   chain: Block[];
