@@ -1,97 +1,98 @@
 {
-    "name": "spiderapp",
-    "version": "0.1.0",
-    "private": true,
-    "dependencies": {
-        "@emotion/react": "^11.7.1",
-        "@emotion/styled": "^11.6.0",
-        "@mui/material": "^5.2.8",
-        "@testing-library/jest-dom": "^5.16.1",
-        "@testing-library/react": "^12.1.2",
-        "@testing-library/user-event": "^13.5.0",
-        "axios": "^0.24.0",
-        "bootstrap": "^5.1.3",
-        "dotenv": "^10.0.0",
-        "lodash": "^4.17.21",
-        "merkle": "^0.6.0",
-        "merkletreejs": "^0.2.27",
-        "react": "^17.0.2",
-        "react-bootstrap": "^2.1.0",
-        "react-dom": "^17.0.2",
-        "react-router-dom": "6",
-        "react-scripts": "5.0.0",
-        "sass": "^1.48.0",
-        "web-vitals": "^2.1.2"
-    },
-    "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
-        "test": "jest —setupFiles dotenv/config --detectOpenHandles --forceExit",
-        "eject": "react-scripts eject"
-    },
-    "eslintConfig": {
-        "extends": [
-            "react-app",
-            "react-app/jest"
-        ]
-    },
-    "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not op_mini all"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
-    },
-    "devDependencies": {
-        "@babel/preset-typescript": "^7.16.7",
-        "@types/crypto-js": "^4.1.0",
-        "@types/elliptic": "^6.4.14",
-        "@types/express": "^4.17.13",
-        "@types/jest": "^27.4.0",
-        "@types/lodash": "^4.14.178",
-        "@types/merkle": "^0.6.1",
-        "@types/supertest": "^2.0.11",
-        "@types/uuid": "^8.3.4",
-        "@types/ws": "^8.2.2",
-        "babel-cli": "^6.26.0",
-        "babel-preset-env": "^1.7.0",
-        "body-parser": "^1.19.1",
-        "crypto-js": "^4.1.1",
-        "elliptic": "^6.5.4",
-        "express": "^4.17.2",
-        "jest": "^27.4.7",
-        "nodemon": "^2.0.15",
-        "superagent": "^7.0.1",
-        "supertest": "^6.2.0",
-        "ts-jest": "^27.1.2",
-        "typescript": "^4.5.4",
-        "ws": "^8.4.0"
-    },
-    "jest": {
-        "verbose": true,
-        "moduleFileExtensions": [
-            "js",
-            "jsx",
-            "json",
-            "ts",
-            "tsx"
-        ],
-        "transform": {
-            "^.+\\.(js|jsx)?$": "babel-jest",
-            "^.+\\.(ts|tsx)?$": "ts-jest"
-        },
-        "testEnvironment": "jsdom",
-        "moduleNameMapper": {
-            "^@/(.*)$": "<rootDir>/$1"
-        },
-        "testMatch": [
-            "**/__tests__/**/*.[jt]s?(x)",
-            "**/?(*.)+(spec|test).[jt]s?(x)"
-        ]
-    }
+  "name": "spiderapp",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+      "@emotion/react": "^11.7.1",
+      "@emotion/styled": "^11.6.0",
+      "@mui/material": "^5.2.8",
+      "@testing-library/jest-dom": "^5.16.1",
+      "@testing-library/react": "^12.1.2",
+      "@testing-library/user-event": "^13.5.0",
+      "axios": "^0.24.0",
+      "bootstrap": "^5.1.3",
+      "dotenv": "^10.0.0",
+      "lodash": "^4.17.21",
+      "merkle": "^0.6.0",
+      "merkletreejs": "^0.2.27",
+      "react": "^17.0.2",
+      "react-bootstrap": "^2.1.0",
+      "react-dom": "^17.0.2",
+      "react-router-dom": "6",
+      "react-scripts": "5.0.0",
+      "sass": "^1.48.0",
+      "web-vitals": "^2.1.2"
+  },
+  "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "jest —setupFiles dotenv/config --detectOpenHandles --forceExit",
+      "dev": "ts-node server/main/main.ts",
+      "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+      "extends": [
+          "react-app",
+          "react-app/jest"
+      ]
+  },
+  "browserslist": {
+      "production": [
+          ">0.2%",
+          "not dead",
+          "not op_mini all"
+      ],
+      "development": [
+          "last 1 chrome version",
+          "last 1 firefox version",
+          "last 1 safari version"
+      ]
+  },
+  "devDependencies": {
+      "@babel/preset-typescript": "^7.16.7",
+      "@types/crypto-js": "^4.1.0",
+      "@types/elliptic": "^6.4.14",
+      "@types/express": "^4.17.13",
+      "@types/jest": "^27.4.0",
+      "@types/lodash": "^4.14.178",
+      "@types/merkle": "^0.6.1",
+      "@types/supertest": "^2.0.11",
+      "@types/uuid": "^8.3.4",
+      "@types/ws": "^8.2.2",
+      "babel-cli": "^6.26.0",
+      "babel-preset-env": "^1.7.0",
+      "body-parser": "^1.19.1",
+      "crypto-js": "^4.1.1",
+      "elliptic": "^6.5.4",
+      "express": "^4.17.2",
+      "jest": "^27.4.7",
+      "nodemon": "^2.0.15",
+      "superagent": "^7.0.1",
+      "supertest": "^6.2.0",
+      "ts-jest": "^27.1.2",
+      "typescript": "^4.5.4",
+      "ws": "^8.4.0"
+  },
+  "jest": {
+      "verbose": true,
+      "moduleFileExtensions": [
+          "js",
+          "jsx",
+          "json",
+          "ts",
+          "tsx"
+      ],
+      "transform": {
+          "^.+\\.(js|jsx)?$": "babel-jest",
+          "^.+\\.(ts|tsx)?$": "ts-jest"
+      },
+      "testEnvironment": "jsdom",
+      "moduleNameMapper": {
+          "^@/(.*)$": "<rootDir>/$1"
+      },
+      "testMatch": [
+          "**/__tests__/**/*.[jt]s?(x)",
+          "**/?(*.)+(spec|test).[jt]s?(x)"
+      ]
+  }
 }
