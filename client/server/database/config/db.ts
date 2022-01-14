@@ -1,4 +1,4 @@
-import mysql from "mysql2";
+import mysql = require("mysql2");
 
 export const db = mysql.createConnection({
     host: "spider.cqrpy1vqvg7t.ap-northeast-2.rds.amazonaws.com",
