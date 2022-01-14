@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Button } from 'react-bootstrap';
 
-const Mining = () => {
+const Mining = ({txData}) => {
   const [data, setData] = useState(undefined);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -11,8 +11,9 @@ const Mining = () => {
     method: "post",
     baseURL: "http://localhost:3001",
     url: "/mineBlock",
-    data: {data:[{tx:"test"}]}
+    data: {data:[{tx:"test"}] }
   }
+  // data: {data:[{tx:"test"}]}
 
   const fetchData = async (params) => {
     try {

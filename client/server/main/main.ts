@@ -65,6 +65,8 @@ const initHttpServer = (port: number) => {
     });
 
     app.get("/transactionPool", (req, res) => {
+        console.log(getTransactionPool());
+        
         res.send(getTransactionPool());
     });
 
