@@ -2,16 +2,18 @@ import React from 'react'
 import "./Blocks.scss"
 
 const Block = ({index, children}) => {
+  const block = children;
+  console.log(block.data);
   return (
     <div className='block'>
       <div>
         index: {index}
       </div>
       <div>
-        hash: {children.hash}
+        hash: {block.hash}
       </div>
       <div>
-        prevHash: {children.header.prevHash}
+        prevHash: {block.header.prevHash}
       </div>
     </div>
   )

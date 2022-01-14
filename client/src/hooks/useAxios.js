@@ -16,7 +16,7 @@ const useAxios = (axiosParams) => {
       setLoading(false);
     }
   };
-
+  
   useEffect(() => {
     fetchData(axiosParams);
   }, []);
