@@ -13,8 +13,8 @@ $cube_size: 100px;
       position:absolute; left:50%; top:50%;
       width:$cube_size; height:$cube_size; border-radius:$cube_size/12;
       background:rgba(221,221,221,0.2);
-      background:linear-gradient(rgba(237,237,237,0.2),rgba(153,153,153,0.1));
-      box-shadow:0 0 4px rgba(255,255,255,0.2),inset 0 0 4px rgba(255,255,255,0.2);
+      background:linear-gradient(rgba(237,237,237,0.2),rgba(80,80,80,0.1));
+      box-shadow:0 0 4px rgba(100,100,100,0.2),inset 0 0 4px rgba(100,100,100,0.2);
     }
   }
 }

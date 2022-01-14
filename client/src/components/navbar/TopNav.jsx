@@ -10,6 +10,7 @@ function TopNav() {
 
 	const handleClose = () => setShow(false);
 	const handleShow = (e) => setShow(true);
+	
 
 	return (
 		<>
@@ -26,7 +27,7 @@ function TopNav() {
 								<Link to="/mempool">Mempool</Link>
 							</Nav>
 							<Nav>
-								<Link to="/utxo">UTXO</Link>
+								<Link to="/transaction">Transaction</Link>
 							</Nav>
 						</Nav>
 						<Nav>

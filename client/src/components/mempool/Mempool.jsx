@@ -1,35 +1,29 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Button } from 'react-bootstrap';
+import useAxios from '../../hooks/useAxios';
 
 const Mempool = ({txData}) => {
-  const [data, setData] = useState(undefined);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
-
-  const params = {
+  const paramsMining = {
     method: "post",
     baseURL: "http://localhost:3001",
     url: "/mineBlock",
     data: {data:[{tx:"test"}] }
   }
-  // data: {data:[{tx:"test"}]}
-
-  const fetchData = async (params) => {
-    try {
-      const result = await axios.request(params);
-      setData(result.data);
-    } catch (error) {
-      setError(error);
-    } finally {
-      setLoading(false);
-    }
+  const mining = async (params) => {
+    const result = await axios(params);
   };
   
+  const { data, loading, error } = useAxios({
+    method: "get",
+    baseURL: "http://localhost:3001",
+    url: "/transactionPool",
+  });
+  
   const handleOnClick = () => {
-    console.log("Clicked!");
-    fetchData(params)
+    mining(paramsMining);
   }
+
 
   return (
     <div className='mempool-container'>
@@ -38,10 +32,22 @@ const Mempool = ({txData}) => {
         <h3>where to store Unconfirmed Transactions</h3>
       </div>
       <div>
+        {loading? <h1>Loading...</h1> : data.map((tx, index) => <Transaction key={tx.id} tx={tx}/>)}
+      </div>
+      <div>
         <Button onClick={handleOnClick}>Mining</Button>
       </div>
     </div>
   )
 }
+
+const Transaction = ({tx}) => {
+  return (
+    <div>
+      {tx.id}
+    </div>
+  )
+}
+
 
 export default Mempool
