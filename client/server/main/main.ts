@@ -88,5 +88,5 @@ initHttpServer(http_port);
 initP2PServer(p2p_port);
 
 ////////////////////////////////////////
-
+initWallet();
 export { app, server };
