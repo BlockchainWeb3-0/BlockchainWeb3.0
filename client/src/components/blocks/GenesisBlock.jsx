@@ -1,10 +1,10 @@
 import React from "react";
-import "./Cube.scss"
+import "./GenesisBlock.scss"
 
-const Cube = ({blockInfo}) => {
+const GenesisBlock = ({blockInfo}) => {
 	return (
 		<>
-			<div className="cube">
+			<div className="genesisBlock">
         {blockInfo.header.index}
 				<div>
 					<div></div>
@@ -19,4 +19,4 @@ const Cube = ({blockInfo}) => {
 	);
 };
 
-export default Cube;
+export default GenesisBlock;

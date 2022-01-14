@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { Nav, Navbar, Container, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Mempool from "../../mempool/Mempool";
 import OffcanvasComp from "../offcanvas/OffcanvasComp";
-import UTXO from "../utxo/UTXO";
 import Wallet from "../wallet/Wallet";
 
 function TopNav() {
@@ -23,9 +21,6 @@ function TopNav() {
 						<Nav className="me-auto">
 							<Nav>
 								<Link to="/blocks">Blocks</Link>
-							</Nav>
-							<Nav>
-								<Link to="/mining">Mining</Link>
 							</Nav>
 							<Nav>
 								<Link to="/mempool">Mempool</Link>

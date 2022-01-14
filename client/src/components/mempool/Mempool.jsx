@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Button } from 'react-bootstrap';
 
-const Mining = ({txData}) => {
+const Mempool = ({txData}) => {
   const [data, setData] = useState(undefined);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -32,13 +32,16 @@ const Mining = ({txData}) => {
   }
 
   return (
-    <div>
-      <Button onClick={handleOnClick}>Mining</Button>
+    <div className='mempool-container'>
       <div>
-        <h1>Transaction List</h1>
+        <h1>Mempool</h1>
+        <h3>where to store Unconfirmed Transactions</h3>
+      </div>
+      <div>
+        <Button onClick={handleOnClick}>Mining</Button>
       </div>
     </div>
   )
 }
 
-export default Mining
+export default Mempool
