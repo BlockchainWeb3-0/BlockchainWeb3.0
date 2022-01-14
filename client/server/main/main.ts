@@ -1,11 +1,12 @@
-import bodyParser from "body-parser";
-import express, { Request, Response } from "express";
-import helmet from "helmet";
+import bodyParser = require("body-parser");
+import express = require("express");
+import { Request, Response } from "express";
+const helmet = require("helmet");
 import "dotenv/config";
 
 import Blockchain from "../blockchain/blockchain";
 import { initP2PServer, getSockets, connectToPeers } from "../p2p/p2p";
-import user from "./routes/user";
+import user = require("./routes/user");
 
 const blockchain: Blockchain = new Blockchain();
 
@@ -20,15 +21,10 @@ app.use("/api/user", user);
 export const http_port: number =
     parseInt(process.env.HTTP_PORT as string) || 3001;
 
-////////////////////////////////////////
-// 최현석 P2P Test
 export const p2p_port: number =
     parseInt(process.env.P2P_PORT as string) || 6001;
-////////////////////////////////////////
 
 const initHttpServer = (port: number) => {
-    app.use(bodyParser.json());
-
     app.get("/", (req: Request, res: Response) => {
         res.send("welcome!");
     });
@@ -45,8 +41,6 @@ const initHttpServer = (port: number) => {
 
     app.get("/public-key", (request, response) => {});
 
-    ////////////////////////////////////////
-    // 최현석 P2P Test
     app.get("/peers", (req, res) => {
         let sockInfo: string[] = [];
         getSockets().forEach((s: any) => {
@@ -54,7 +48,6 @@ const initHttpServer = (port: number) => {
             console.log(s._socket);
         });
         res.send(sockInfo);
-        //res.send(getSockets());
     });
 
     app.post("/mineBlock", (req: Request, res: Response) => {
@@ -71,8 +64,8 @@ const initHttpServer = (port: number) => {
         console.log(data);
         res.send(data);
     });
-    ////////////////////////////////////////
 };
+initHttpServer(http_port);
 
 const server = app.listen(http_port, () => {
     console.log(`
@@ -81,11 +74,6 @@ const server = app.listen(http_port, () => {
     ####################################`);
 });
 
-initHttpServer(http_port);
-////////////////////////////////////////
-// 최현석 P2P Test
 initP2PServer(p2p_port);
-
-////////////////////////////////////////
 
 export { app, server };
