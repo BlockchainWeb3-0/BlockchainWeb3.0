@@ -1,4 +1,4 @@
-import WebSocket from "ws";
+import WebSocket = require("ws");
 import { Server } from "ws";
 import Block from "../blockchain/block";
 import Blockchain from "../blockchain/blockchain";

@@ -1,4 +1,4 @@
-import merkle from "merkle";
+import merkle = require("merkle");
 import Block from "./block";
 import * as config from "../config";
 
