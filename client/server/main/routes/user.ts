@@ -50,7 +50,8 @@ router.post("/signin", async (req: express.Request, res: express.Response) => {
                 {
                     email,
                 },
-                process.env.ACCESS_TOKEN_SECRET as string,
+                (process.env.ACCESS_TOKEN_SECRET as string) ||
+                    "JwtSecretHahagOgo",
                 {
                     expiresIn: "5m", // 만료 : 5분
                     issuer: "spider", // 발행자

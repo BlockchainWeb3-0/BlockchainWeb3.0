@@ -12,7 +12,7 @@ export const verifyToken = (
         let token = req.cookies.x_auth;
         (<any>req).decoded = jwt.verify(
             token,
-            process.env.ACCESS_TOKEN_SECRET as string
+            (process.env.ACCESS_TOKEN_SECRET as string) || "JwtSecretHahagOgo"
         );
         return next();
     } catch (err: any | unknown) {
