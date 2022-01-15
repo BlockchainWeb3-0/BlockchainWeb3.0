@@ -7,6 +7,7 @@ import Signin from "./components/sign/Signin";
 import Signup from "./components/sign/Signup";
 import Mempool from "./components/mempool/Mempool";
 import Transaction from "./components/transaction/Transaction";
+import Peer from "./components/peer/Peer";
 
 function App() {
 	return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="blocks" element={<Blocks />} />
             <Route path="mempool" element={<Mempool />} />
             <Route path="transaction" element={<Transaction />} />
+            <Route path="peer" element={<Peer />} />
             <Route path="signin" element={<Signin />} />
             <Route path="signup" element={<Signup />} />
           </Route>
