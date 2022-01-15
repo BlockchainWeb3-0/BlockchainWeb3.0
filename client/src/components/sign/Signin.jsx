@@ -3,6 +3,7 @@ import { Box, Button, TextField } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import PopupMsg from "../alert/PopupMsg";
+import { useCookies } from "react-cookie";
 
 export default function Signin() {
     const [inputInfo, setInputInfo] = useState({
@@ -13,6 +14,8 @@ export default function Signin() {
         type: "info",
         text: "If you don't have account, press SIGN-UP button!",
     });
+
+    const [cookies, setCookie] = useCookies(["x_auth"]);
 
     const signInOnClick = async () => {
         console.log("click!");
@@ -25,9 +28,8 @@ export default function Signin() {
                 type: "success",
                 text: "Sign-in success!",
             });
-            setTimeout(() => {
-                window.location.replace("/");
-            }, 2000);
+            setCookie("x_auth", response.data.token);
+            window.location.replace("/");
         } else if (response.data.data.includes("failEmail")) {
             setSigninResult({
                 type: "warning",

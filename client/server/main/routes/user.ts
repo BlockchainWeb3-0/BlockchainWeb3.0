@@ -6,25 +6,9 @@ import "dotenv/config";
 
 import { db } from "../../database/config/db";
 import { verifyToken } from "./middlewares";
+import { generatePrivateKey } from "../../wallet/wallet";
 
 const router: express.Router = express.Router();
-
-router.get("/", async (req: Request, res: Response) => {
-    db.query("SELECT * FROM user", (err, res) => {
-        console.log(res);
-    });
-    console.log("home");
-    res.json({ data: "data1" });
-});
-
-router.get("/login", async (req: Request, res: Response) => {
-    console.log("쿠키 없음??", req.cookies.x_auth);
-    res.json({ data: "data1" });
-});
-router.get("/register", (req, res: express.Response) => {
-    console.log("register");
-    res.send({ data: "data2" });
-});
 
 router.post("/signin", async (req: express.Request, res: express.Response) => {
     const { email, password } = req.body;
@@ -46,7 +30,7 @@ router.post("/signin", async (req: express.Request, res: express.Response) => {
                 return res.send({ data: "failPassword" });
             }
 
-            const token = jwt.sign(
+            const token: string = jwt.sign(
                 {
                     email,
                 },
@@ -59,10 +43,16 @@ router.post("/signin", async (req: express.Request, res: express.Response) => {
             );
             console.log("토큰값 보자", token);
             console.log(jwt.decode(token));
-            return res.cookie("x_auth", token).status(200).json({
-                data: "success",
-                token: token,
-            });
+            return res
+                .cookie("x_auth", token.toString(), {
+                    httpOnly: true,
+                    maxAge: 24 * 60 * 60 * 1000,
+                })
+                .status(200)
+                .json({
+                    data: "success",
+                    token: token,
+                });
             // return res.status(200).json({
             //     message: 'tokenOk',
             //     token: token
@@ -81,7 +71,7 @@ router.get(
 
 router.get("/logout", (req, res) => {
     res.clearCookie("x_auth");
-    res.send({ success: "logout" });
+    res.redirect("/");
 });
 
 router.post("/signup", async (req, res) => {
@@ -89,24 +79,26 @@ router.post("/signup", async (req, res) => {
     const password = req.body.password;
     const hash = await bcrypt.hash(password, 12);
 
+    const privatekey = generatePrivateKey();
+
     if (email == "") {
         return res.send({ data: "emptyEmail" });
     }
     if (password == "") {
         return res.send({ data: "emptyPassword" });
     }
-    const registerUser = (email: any, password: any) => {
-        const sql = `INSERT INTO user(email,password) VALUES ("${email}","${password}")`;
+    const registerUser = (email: any, password: any, privatekey: string) => {
+        const sql = `INSERT INTO user(email,password,privatekey) VALUES ("${email}","${password}","${privatekey}")`;
         db.query(sql, (err, results) => {
             if (err) {
                 console.log(err);
                 return res.send({ data: "fail" });
             }
-            return res.send({ data: "success" });
+            return res.send({ data: "success", key: privatekey });
         });
     };
 
-    registerUser(email, hash);
+    registerUser(email, hash, privatekey);
 });
 
 export = router;

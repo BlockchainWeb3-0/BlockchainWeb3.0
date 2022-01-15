@@ -1,7 +1,7 @@
 export const cors = (req: any, res: any, next: any) => {
     console.log("Through cors Middleware");
     res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-    res.header("Access-Control-Allow-Credentials", "http://localhost:3000");
+    //res.header("Access-Control-Allow-Credentials", "http://localhost:3000");
     res.header(
         "Access-Control-Allow-Headers",
         "Origin, X-Requested-With, Content-Type, Accept"

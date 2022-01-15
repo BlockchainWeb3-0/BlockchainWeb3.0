@@ -19,12 +19,14 @@
         "helmet": "^5.0.1",
         "http-proxy-middleware": "^2.0.1",
         "jsonwebtoken": "^8.5.1",
+        "jwt-decode": "^3.1.2",
         "lodash": "^4.17.21",
         "merkle": "^0.6.0",
         "merkletreejs": "^0.2.27",
         "mysql2": "^2.3.3",
         "react": "^17.0.2",
         "react-bootstrap": "^2.1.0",
+        "react-cookie": "^4.1.1",
         "react-dom": "^17.0.2",
         "react-router-dom": "6",
         "react-scripts": "5.0.0",
@@ -35,7 +37,7 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "jest —setupFiles dotenv/config --detectOpenHandles --forceExit",
-        "dev": "ts-node server/main/main.ts",
+        "dev": "nodemon server/main/main.ts",
         "eject": "react-scripts eject"
     },
     "eslintConfig": {
