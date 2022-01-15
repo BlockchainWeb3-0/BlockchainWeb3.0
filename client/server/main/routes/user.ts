@@ -18,7 +18,7 @@ router.get("/", async (req: Request, res: Response) => {
 });
 
 router.get("/login", async (req: Request, res: Response) => {
-    console.log("login");
+    console.log("쿠키 없음??", req.cookies.x_auth);
     res.json({ data: "data1" });
 });
 router.get("/register", (req, res: express.Response) => {
@@ -26,49 +26,48 @@ router.get("/register", (req, res: express.Response) => {
     res.send({ data: "data2" });
 });
 
-router.post("/login", async (req: express.Request, res: express.Response) => {
+router.post("/signin", async (req: express.Request, res: express.Response) => {
     const { email, password } = req.body;
     const hash = await bcrypt.hash(password, 12);
 
-    db.query(
-        `SELECT * FROM student WHERE email='${email}'`,
-        (err, rows: any) => {
+    db.query(`SELECT * FROM user WHERE email='${email}'`, (err, rows: any) => {
+        if (err) {
+            console.log(err);
+            return res.send({ data: "fail" });
+        }
+        if (rows.length === 0) {
+            return res.send({ data: "failEmail" });
+        }
+        bcrypt.compare(password, rows[0].password, (err, result) => {
             if (err) {
                 console.log(err);
-                return res.send({ data: "fail" });
+                return res.send({ data: "failPassword" });
+            } else if (result == false) {
+                return res.send({ data: "failPassword" });
             }
-            if (rows.length === 0) {
-                return res.send({ data: "failEmail" });
-            }
-            bcrypt.compare(password, rows[0].password, (err, result) => {
-                if (err) {
-                    console.log(err);
-                    return res.send({ data: "failPassword" });
-                } else if (result == false) {
-                    return res.send({ data: "failPassword" });
-                }
 
-                const token = jwt.sign(
-                    {
-                        email,
-                    },
-                    process.env.ACCESS_TOKEN_SECRET as string,
-                    {
-                        expiresIn: "5m", // 만료 : 5분
-                        issuer: "chs", // 발행자
-                    }
-                );
-                return res.cookie("x_auth", token).status(200).json({
-                    message: "tokenOk",
-                    token: token,
-                });
-                // return res.status(200).json({
-                //     message: 'tokenOk',
-                //     token: token
-                // })
+            const token = jwt.sign(
+                {
+                    email,
+                },
+                process.env.ACCESS_TOKEN_SECRET as string,
+                {
+                    expiresIn: "5m", // 만료 : 5분
+                    issuer: "spider", // 발행자
+                }
+            );
+            console.log("토큰값 보자", token);
+            console.log(jwt.decode(token));
+            return res.cookie("x_auth", token).status(200).json({
+                data: "success",
+                token: token,
             });
-        }
-    );
+            // return res.status(200).json({
+            //     message: 'tokenOk',
+            //     token: token
+            // })
+        });
+    });
 });
 
 router.get(
@@ -84,9 +83,9 @@ router.get("/logout", (req, res) => {
     res.send({ success: "logout" });
 });
 
-router.post("/register", async (req, res) => {
-    const email = req.body.user.email;
-    const password = req.body.user.password;
+router.post("/signup", async (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
     const hash = await bcrypt.hash(password, 12);
 
     if (email == "") {
@@ -99,6 +98,7 @@ router.post("/register", async (req, res) => {
         const sql = `INSERT INTO user(email,password) VALUES ("${email}","${password}")`;
         db.query(sql, (err, results) => {
             if (err) {
+                console.log(err);
                 return res.send({ data: "fail" });
             }
             return res.send({ data: "success" });
