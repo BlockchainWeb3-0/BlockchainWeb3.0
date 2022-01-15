@@ -51,8 +51,8 @@ const initHttpServer = (port: number) => {
         let sockInfo: string[] = [];
         getSockets().forEach((s: any) => {
             sockInfo.push(s._socket.remoteAddress + ":" + s._socket.remotePort);
-            console.log(s._socket);
         });
+        console.log(sockInfo);
         res.send(sockInfo);
     });
 

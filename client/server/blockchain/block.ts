@@ -53,7 +53,7 @@ export default class Block {
         const data = [{ tx: "This is Genesis Block" }];
         const header = new BlockHeader(
             "0.1.0",
-            0,
+            1,
             "0".repeat(64),
             merkle("sha256")
                 .sync([JSON.stringify(data)])
@@ -72,10 +72,10 @@ export default class Block {
         const index = lastBlock.header.index + 1;
         const prevHash: string = lastBlock.hash;
         let merkleRoot = data.length
-            ? merkle("sha256")
-                  .sync([JSON.stringify(data)])
-                  .root()
-            : "0".repeat(64);
+					? merkle("sha256")
+							.sync([JSON.stringify(data)])
+							.root()
+					: "0".repeat(64);
         let timestamp: number = Math.round(Date.now() / 1000);
         let difficulty = this.adjustDifficulty(lastBlock, timestamp);
         let nonce: number = 0;
