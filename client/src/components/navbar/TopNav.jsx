@@ -76,10 +76,12 @@ function TopNav() {
                                 <Nav>
                                     <Link to="/transaction">Transaction</Link>
                                 </Nav>
+                                <Nav>
+                                    <Link to="/peer">Peer</Link>
+                                </Nav>
                             </Nav>
                             <Nav>
                                 <Nav.Link onClick={handleShow}>MyPage</Nav.Link>
-
                                 <Nav>
                                     <Link to="/api/user/logout">Logout</Link>
                                 </Nav>

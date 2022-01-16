@@ -8,7 +8,7 @@ import cookieParser = require("cookie-parser");
 import Blockchain from "../blockchain/blockchain";
 import { getTransactionPool } from "../transactionPool/transactionPool";
 import { getPublicFromWallet, initWallet } from "../wallet/wallet";
-import { initP2PServer, getSockets, connectToPeers } from "../p2p/p2p";
+import { initP2PServer, getSockets, connectToPeers, broadcastLatest } from "../p2p/p2p";
 import { cors } from "./cors";
 import user = require("./routes/user");
 
@@ -64,6 +64,7 @@ const initHttpServer = (port: number) => {
         console.log("mineBlock", data);
         blockchain.addBlock(data);
         console.log(blockchain);
+        broadcastLatest();
         res.send("ok");
     });
 
@@ -93,4 +94,4 @@ const server = app.listen(http_port, () => {
 initP2PServer(p2p_port);
 
 initWallet();
-export { app, server };
+export { app, server, blockchain };
