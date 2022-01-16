@@ -22,7 +22,6 @@ export default function Signup() {
                 type: "success",
                 text: `Account was created successfully!. Replace to Signin automatically in few seconds`,
             });
-            console.log(response.data);
             setTimeout(() => {
                 alert("your private key :", response.data.key);
                 window.location.replace("/signin");
@@ -41,10 +40,6 @@ export default function Signup() {
             [e.target.name]: e.target.value,
         });
     };
-
-    // useEffect(() => {
-    // 	console.log(signinResult);
-    // }, [signinResult]);
 
     return (
         <>
