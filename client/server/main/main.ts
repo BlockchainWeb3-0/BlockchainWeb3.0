@@ -3,6 +3,7 @@ import express = require("express");
 import { Request, Response } from "express";
 const helmet = require("helmet");
 import "dotenv/config";
+import cookieParser = require("cookie-parser");
 
 import Blockchain from "../blockchain/blockchain";
 import { getTransactionPool } from "../transactionPool/transactionPool";
@@ -20,6 +21,8 @@ app.disable("x-powered-by");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cookieParser());
+
 app.use("/api/user", user);
 
 export const http_port: number =
