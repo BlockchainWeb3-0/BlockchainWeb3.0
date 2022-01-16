@@ -2,7 +2,7 @@ import WebSocket = require("ws");
 import { Server } from "ws";
 import Block from "../blockchain/block";
 import Blockchain from "../blockchain/blockchain";
-import { blockchain } from "../main/main";
+import { blockchain } from "../main/main2";
 
 const sockets: WebSocket[] = [];
 
