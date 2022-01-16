@@ -8,6 +8,8 @@ import Signup from "./components/sign/Signup";
 import Mempool from "./components/mempool/Mempool";
 import Transaction from "./components/transaction/Transaction";
 import Peer from "./components/peer/Peer";
+import Peer1 from "./components/peer/Peer1";
+import Peer2 from "./components/peer/Peer2";
 
 function App() {
 	return (
@@ -20,7 +22,11 @@ function App() {
             <Route path="blocks" element={<Blocks />} />
             <Route path="mempool" element={<Mempool />} />
             <Route path="transaction" element={<Transaction />} />
-            <Route path="peer" element={<Peer />} />
+            <Route path="peer">
+              <Route index element={<Peer/>}/>
+              <Route path="1" element={<Peer1/>}/>
+              <Route path="2" element={<Peer2/>}/>
+            </Route>
             <Route path="signin" element={<Signin />} />
             <Route path="signup" element={<Signup />} />
           </Route>
