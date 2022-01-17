@@ -3,8 +3,10 @@ import { Box, Button, TextField } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import PopupMsg from "../alert/PopupMsg";
+import { useNavigate } from "react-router-dom";
 
-export default function Signup() {
+export default function Signup({ history }) {
+    let navigate = useNavigate();
     const [inputInfo, setInputInfo] = useState({
         email: "",
         password: "",
@@ -23,8 +25,9 @@ export default function Signup() {
                 text: `Account was created successfully!. Replace to Signin automatically in few seconds`,
             });
             setTimeout(() => {
-                alert("your private key :", response.data.key);
-                window.location.replace("/signin");
+                navigate(`/yourkey/${response.data.key}`);
+                // alert("your private key :", response.data.key);
+                // window.location.replace("/signin");
             }, 2000);
         } else if (response.data.data.includes("fail")) {
             setSigninResult({
