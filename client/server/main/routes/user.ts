@@ -70,8 +70,8 @@ router.get(
 );
 
 router.get("/logout", (req, res) => {
-    res.clearCookie("x_auth");
-    res.redirect("/");
+    res.clearCookie("x_auth").redirect("/");
+    //res.redirect("/");
 });
 
 router.post("/signup", async (req, res) => {

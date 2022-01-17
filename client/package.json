@@ -37,8 +37,8 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "jest —setupFiles dotenv/config --detectOpenHandles --forceExit",
-        "dev": "ts-node server/main/main.ts",
-        "dev2": "ts-node server/main/main2.ts",
+        "dev": "nodemon server/main/main.ts",
+        "dev2": "nodemon server/main/main2.ts",
         "eject": "react-scripts eject"
     },
     "eslintConfig": {

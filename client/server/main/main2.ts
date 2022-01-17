@@ -7,7 +7,12 @@ import "dotenv/config";
 import Blockchain from "../blockchain/blockchain";
 import { getTransactionPool } from "../transactionPool/transactionPool";
 import { getPublicFromWallet, initWallet } from "../wallet/wallet";
-import { initP2PServer, getSockets, connectToPeers, broadcastLatest } from "../p2p/p2p2";
+import {
+    initP2PServer,
+    getSockets,
+    connectToPeers,
+    broadcastLatest,
+} from "../p2p/p2p2";
 import { cors } from "./cors";
 import user = require("./routes/user");
 
@@ -65,7 +70,7 @@ const initHttpServer = (port: number) => {
 
     app.get("/transactionPool", (req, res) => {
         console.log(getTransactionPool());
-        
+
         res.send(getTransactionPool());
     });
 

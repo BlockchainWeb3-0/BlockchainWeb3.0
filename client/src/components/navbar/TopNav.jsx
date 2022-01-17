@@ -83,7 +83,9 @@ function TopNav() {
                             <Nav>
                                 <Nav.Link onClick={handleShow}>MyPage</Nav.Link>
                                 <Nav>
-                                    <Link to="/api/user/logout">Logout</Link>
+                                    <Nav.Link href="/api/user/logout">
+                                        Logout
+                                    </Nav.Link>
                                 </Nav>
                             </Nav>
                         </Navbar.Collapse>
