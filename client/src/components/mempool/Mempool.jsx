@@ -10,6 +10,12 @@ const Mempool = ({txData}) => {
     url: "/mineBlock",
     data: {data:[{tx:"test"}] }
   }
+  const paramsMining2 = {
+    method: "post",
+    baseURL: "http://localhost:3002",
+    url: "/mineBlock",
+    data: {data:[{tx:"asdf"}] }
+  }
   const mining = async (params) => {
     const result = await axios(params);
   };
@@ -24,6 +30,10 @@ const Mempool = ({txData}) => {
     mining(paramsMining);
   }
 
+  const handleOnClick2 = () => {
+    mining(paramsMining2);
+  }
+
 
   return (
     <div className='mempool-container'>
@@ -36,6 +46,9 @@ const Mempool = ({txData}) => {
       </div>
       <div>
         <Button onClick={handleOnClick}>Mining</Button>
+      </div>
+      <div>
+        <Button onClick={handleOnClick2}>Mining3002</Button>
       </div>
     </div>
   )
