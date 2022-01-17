@@ -1,8 +1,13 @@
-.peer-container{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  width: 100%;
-  height: 50vh;
-  align-items: center;
+.peers-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 80vh;
+    align-items: center;
+}
+
+.peer_container {
+    margin: 15px auto;
+    width: 500px;
 }

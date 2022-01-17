@@ -3,13 +3,13 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 
-const Peer1 = () => {
-    const [peerPort, setPeerPort] = useState("6002");
+const Peer3 = () => {
+    const [peerPort, setPeerPort] = useState("6001");
 
     const getPeers = async () => {
         const params = {
             method: "get",
-            baseURL: "http://localhost:3001",
+            baseURL: "http://localhost:3003",
             url: "/peers",
         };
         const result = await axios.request(params);
@@ -21,7 +21,7 @@ const Peer1 = () => {
         peerList.forEach(async (peer) => {
             const params = {
                 method: "post",
-                baseURL: "http://localhost:3001",
+                baseURL: "http://localhost:3003",
                 url: "/addPeer",
                 data: { data: [`ws://localhost:${peer}`] },
             };
@@ -36,8 +36,7 @@ const Peer1 = () => {
 
     return (
         <div className="peer_container">
-            <h1>Peer1</h1>
-            <div>(Port: 3001, 6001)</div>
+            <h1>Peer3 (Port: 3003, 6003)</h1>
             <div>
                 <Button onClick={getPeers}>Get Peers</Button>
             </div>
@@ -56,4 +55,4 @@ const Peer1 = () => {
     );
 };
 
-export default Peer1;
+export default Peer3;

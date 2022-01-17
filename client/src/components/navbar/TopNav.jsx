@@ -99,7 +99,7 @@ function TopNav() {
                     scroll={true}
                     backdrop={true}
                 >
-                    <Wallet />
+                    <Wallet address={user.address} />
                 </OffcanvasComp>
             </>
         );
