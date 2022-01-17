@@ -3,11 +3,12 @@ import express = require("express");
 import { Request, Response } from "express";
 const helmet = require("helmet");
 import "dotenv/config";
+import cookieParser = require("cookie-parser");
 
 import Blockchain from "../blockchain/blockchain";
 import { getTransactionPool } from "../transactionPool/transactionPool";
 import { getPublicFromWallet, initWallet } from "../wallet/wallet";
-import { initP2PServer, getSockets, connectToPeers } from "../p2p/p2p";
+import { initP2PServer, getSockets, connectToPeers, broadcastLatest } from "../p2p/p2p";
 import { cors } from "./cors";
 import user = require("./routes/user");
 
@@ -20,6 +21,8 @@ app.disable("x-powered-by");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cookieParser());
+
 app.use("/api/user", user);
 
 export const http_port: number =
@@ -51,8 +54,8 @@ const initHttpServer = (port: number) => {
         let sockInfo: string[] = [];
         getSockets().forEach((s: any) => {
             sockInfo.push(s._socket.remoteAddress + ":" + s._socket.remotePort);
-            console.log(s._socket);
         });
+        console.log(sockInfo);
         res.send(sockInfo);
     });
 
@@ -61,6 +64,7 @@ const initHttpServer = (port: number) => {
         console.log("mineBlock", data);
         blockchain.addBlock(data);
         console.log(blockchain);
+        broadcastLatest();
         res.send("ok");
     });
 
@@ -90,4 +94,4 @@ const server = app.listen(http_port, () => {
 initP2PServer(p2p_port);
 
 initWallet();
-export { app, server };
+export { app, server, blockchain };

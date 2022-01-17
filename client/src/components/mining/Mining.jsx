@@ -7,14 +7,6 @@ const Mining = ({txData}) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const params = {
-    method: "post",
-    baseURL: "http://localhost:3001",
-    url: "/mineBlock",
-    data: {data:[{tx:"test"}] }
-  }
-  // data: {data:[{tx:"test"}]}
-
   const fetchData = async (params) => {
     try {
       const result = await axios.request(params);
@@ -28,6 +20,12 @@ const Mining = ({txData}) => {
   
   const handleOnClick = () => {
     console.log("Clicked!");
+    const params = {
+      method: "post",
+      baseURL: "http://localhost:3001",
+      url: "/mineBlock",
+      data: {data:[{tx:"test"}] }
+    }
     fetchData(params)
   }
 
