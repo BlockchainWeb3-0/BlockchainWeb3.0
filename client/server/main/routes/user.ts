@@ -7,7 +7,9 @@ import "dotenv/config";
 import { db } from "../../database/config/db";
 import { verifyToken } from "./middlewares";
 import { generatePrivateKey } from "../../wallet/wallet";
+import { ec } from "elliptic";
 
+const EC = new ec("secp256k1");
 const router: express.Router = express.Router();
 
 router.post("/signin", async (req: express.Request, res: express.Response) => {
@@ -33,6 +35,7 @@ router.post("/signin", async (req: express.Request, res: express.Response) => {
             const token: string = jwt.sign(
                 {
                     email,
+                    address: rows[0].publickey,
                 },
                 (process.env.ACCESS_TOKEN_SECRET as string) ||
                     "JwtSecretHahagOgo",
@@ -80,6 +83,8 @@ router.post("/signup", async (req, res) => {
     const hash = await bcrypt.hash(password, 12);
 
     const privatekey = generatePrivateKey();
+    const key = EC.keyFromPrivate(privatekey, "hex");
+    const publickey = key.getPublic().encode("hex", false);
 
     if (email == "") {
         return res.send({ data: "emptyEmail" });
@@ -87,8 +92,13 @@ router.post("/signup", async (req, res) => {
     if (password == "") {
         return res.send({ data: "emptyPassword" });
     }
-    const registerUser = (email: any, password: any, privatekey: string) => {
-        const sql = `INSERT INTO user(email,password,privatekey) VALUES ("${email}","${password}","${privatekey}")`;
+    const registerUser = (
+        email: any,
+        password: any,
+        publickey: string,
+        privatekey: string
+    ) => {
+        const sql = `INSERT INTO user(email,password,publickey,privatekey) VALUES ("${email}","${password}","${publickey}","${privatekey}")`;
         db.query(sql, (err, results) => {
             if (err) {
                 console.log(err);
@@ -98,7 +108,7 @@ router.post("/signup", async (req, res) => {
         });
     };
 
-    registerUser(email, hash, privatekey);
+    registerUser(email, hash, publickey, privatekey);
 });
 
 export = router;
