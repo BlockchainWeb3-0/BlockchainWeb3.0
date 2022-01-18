@@ -3,8 +3,9 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 
-const Peer3 = () => {
+const Peer1 = () => {
     const [peerPort, setPeerPort] = useState("6001");
+    const [statePeers, setStatePeers] = useState([]);
 
     const getPeers = async () => {
         const params = {
@@ -13,8 +14,10 @@ const Peer3 = () => {
             url: "/peers",
         };
         const result = await axios.request(params);
-        console.log("Connected peers : ", result.data);
+        //console.log("Connected peers : ", result.data);
+        setStatePeers(result.data);
     };
+    console.log(statePeers);
 
     const addPeers = () => {
         const peerList = peerPort.split(" ");
@@ -36,16 +39,18 @@ const Peer3 = () => {
 
     return (
         <div className="peer_container">
-            <h1>Peer3 (Port: 3003, 6003)</h1>
-            <div>
+            <div className="peer_name">Peer3</div>
+            <div className="peer_port">(Port: 3003, Peer: 6003)</div>
+            <div className="peer_getPeers">
                 <Button onClick={getPeers}>Get Peers</Button>
+                {statePeers.join(" , ")}
             </div>
-            <div>
+            <div className="peer_textField">
                 <TextField
                     required
-                    label="Peer Port"
+                    label="Peer Port default : 6001"
                     variant="standard"
-                    helperText="Using space to add multiple peers (ex. 6002 6003)"
+                    helperText="Using space to add multiple peers (ex. 6001 6002)"
                     name="port"
                     onChange={textOnChange}
                 />
@@ -55,4 +60,4 @@ const Peer3 = () => {
     );
 };
 
-export default Peer3;
+export default Peer1;
