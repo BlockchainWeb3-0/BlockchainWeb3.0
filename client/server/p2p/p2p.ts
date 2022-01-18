@@ -112,6 +112,17 @@ const responseLatestMsg = (): Message => ({
   data: JSON.stringify([blockchain.getLastBlock()]),
 });
 
+// transaction pool을 위한 통신
+const queryTransactionPoolMsg = (): Message => ({
+  type: MessageType.QUERY_TRANSACTION_POOL,
+  data: null,
+})
+const responseTransactionPoolMsg = (): Message => ({
+  type: MessageType.RESPONSE_TRANSACTION_POOL,
+  data: JSON.stringify(TransactionPool.getTransactionPool()),
+})
+
+
 const initErrorHandler = (ws: WebSocket) => {
   const closeConnection = (myWs: WebSocket) => {
     console.log('connection failed to peer: ' + myWs.url);
@@ -170,4 +181,8 @@ const connectToPeers = (newPeers: string[]): void => {
   });
 };
 
-export { connectToPeers, broadcastLatest, initP2PServer, getSockets };
+const broadcastTransctionPool = () => {
+  broadcast(responseTransactionPoolMsg());
+}
+
+export { connectToPeers, broadcastLatest, broadcastTransctionPool, initP2PServer, getSockets };

@@ -5,7 +5,7 @@ const helmet = require("helmet");
 import "dotenv/config";
 
 import Blockchain from "../blockchain/blockchain";
-import { getTransactionPool } from "../transactionPool/transactionPool";
+import { TransactionPool } from "../transactionPool/transactionPool";
 import { getPublicFromWallet, initWallet } from "../wallet/wallet";
 import {
     initP2PServer,
@@ -69,9 +69,9 @@ const initHttpServer = (port: number) => {
     });
 
     app.get("/transactionPool", (req, res) => {
-        console.log(getTransactionPool());
+        console.log(TransactionPool.getTransactionPool());
 
-        res.send(getTransactionPool());
+        res.send(TransactionPool.getTransactionPool());
     });
 
     app.post("/addPeer", (req: Request, res: Response) => {
