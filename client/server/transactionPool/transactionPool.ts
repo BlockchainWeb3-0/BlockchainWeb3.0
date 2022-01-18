@@ -29,7 +29,7 @@ class TransactionPool {
 		tx: Transaction,
 		unspentTxOuts: UnspentTxOut[]
 	) => {
-		if (!TxFunctions.validateTransaction) {
+		if (!TxFunctions.validateTransaction(tx, unspentTxOuts)) {
 			throw Error("You are trying to add invalid tx to transaction pool");
 		}
 
@@ -61,9 +61,12 @@ class TransactionPool {
 	 * - 새로운 블록에 추가된 trasaction들을 transaction Pool에서 제거
 	 * @param unspentTxOuts
 	 */
-	static updateTransactionPool = (unspentTxOuts: UnspentTxOut[]) => {
+	static updateTransactionPool = (unspentTxOuts: UnspentTxOut[] | null) => {
 		// Transaction Pool에 있는 트랜잭션 중에
 		// UTXO에 있다면 이미 새로운 블록에 포함된 것으로 취급
+		if( unspentTxOuts == null) {
+			throw Error("Invalid unspentTxOuts")
+		}
 		const invalidTxs = [];
 		for (const tx of transactionPool) {
 			for (const txIn of tx.txIns) {

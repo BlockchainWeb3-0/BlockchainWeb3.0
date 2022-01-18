@@ -2,7 +2,9 @@ import WebSocket = require("ws");
 import { Server } from "ws";
 import Block from "../blockchain/block";
 import Blockchain from "../blockchain/blockchain";
-import { blockchain } from "../main/main2";
+import { blockchain, unspentTxOuts } from "../main/main2";
+import { Transaction } from "../transaction/transaction";
+import { TransactionPool } from "../transactionPool/transactionPool";
 
 const sockets: WebSocket[] = [];
 
@@ -10,6 +12,8 @@ enum MessageType {
     QUERY_LATEST,
     QUERY_ALL,
     RESPONSE_BLOCKCHAIN,
+    QUERY_TRANSACTION_POOL,
+    RESPONSE_TRANSACTION_POOL,
 }
 
 class Message {
@@ -20,11 +24,7 @@ class Message {
     }
 }
 
-const getSockets = (): WebSocket[] => {
-    return sockets;
-};
-
-getSockets();
+const getSockets = (): WebSocket[] => sockets;
 
 const initP2PServer = (p2pPort: number) => {
     const server: Server = new WebSocket.Server({ port: p2pPort });
@@ -42,6 +42,11 @@ const initConnection = (ws: WebSocket) => {
     initMessageHandler(ws);
     initErrorHandler(ws);
     write(ws, queryChainLengthMsg());
+
+    // Blockchain query한 다음, 일정시간 이후 transaction pool query
+    setTimeout(()=>{
+        broadcast(queryTransactionPoolMsg());
+    }, 500)
 };
 
 const JSONToObject = <T>(data: string): T => {
@@ -83,6 +88,24 @@ const initMessageHandler = (ws: WebSocket) => {
                     }
                     handleBlockchainResponse(receivedBlocks);
                     break;
+                case MessageType.QUERY_TRANSACTION_POOL:
+                    write(ws, responseTransactionPoolMsg());
+                    break;
+                case MessageType.RESPONSE_TRANSACTION_POOL:
+                    const receivedTransactions: Transaction[] = JSONToObject<Transaction[]>(message.data);
+                    if (receivedTransactions == null) {
+                        console.log("Invalid transaction received: ", JSON.stringify(message.data));
+                        break;
+                    }
+                    receivedTransactions.forEach((transaction: Transaction) => {
+                        try {
+                            Blockchain.handleReceivedTransaction(transaction, unspentTxOuts);
+                            broadcastTransctionPool();
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    })
+                    break;
             }
         } catch (e) {
             console.log(e);
@@ -114,6 +137,17 @@ const responseLatestMsg = (): Message => ({
     type: MessageType.RESPONSE_BLOCKCHAIN,
     data: JSON.stringify([blockchain.getLastBlock()]),
 });
+
+// transaction pool을 위한 통신
+const queryTransactionPoolMsg = (): Message => ({
+	type: MessageType.QUERY_TRANSACTION_POOL,
+	data: null,
+});
+const responseTransactionPoolMsg = (): Message => ({
+	type: MessageType.RESPONSE_TRANSACTION_POOL,
+	data: JSON.stringify(TransactionPool.getTransactionPool()),
+});
+
 
 const initErrorHandler = (ws: WebSocket) => {
     const closeConnection = (myWs: WebSocket) => {
@@ -184,4 +218,8 @@ const connectToPeers = (newPeers: string[]): void => {
     });
 };
 
-export { connectToPeers, broadcastLatest, initP2PServer, getSockets };
+const broadcastTransctionPool = () => {
+	broadcast(responseTransactionPoolMsg());
+}
+
+export { connectToPeers, broadcastLatest, broadcastTransctionPool, initP2PServer, getSockets };

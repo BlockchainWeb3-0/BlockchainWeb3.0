@@ -2,7 +2,7 @@ import merkle = require('merkle');
 import Block from './block';
 import * as config from '../config';
 import { Transaction, TxFunctions, UnspentTxOut } from '../transaction/transaction';
-import { createTransaction, getBalance, getPrivateFromWallet, getPublicFromWallet } from '../wallet/wallet';
+import { createTransaction, findUnspentTxOuts, getBalance, getPrivateFromWallet, getPublicFromWallet } from '../wallet/wallet';
 import _ = require('lodash');
 import { TransactionPool } from '../transactionPool/transactionPool';
 
@@ -26,19 +26,6 @@ export default class Blockchain {
 		if (Blockchain.isValidNewBlock(newBlock, lastBlock))
 			this.chain.push(newBlock);
 		return newBlock;
-	}
-
-	static createBlockData = (receiverAddress: string, amount: number, blockchain:Blockchain, unspentTxOuts: UnspentTxOut[]) => {
-		if (!TxFunctions.isValidAddress(receiverAddress)){
-			throw Error("Invalid address");
-		}
-		if (typeof amount !== 'number') {
-			throw Error("Invalid amount")
-		}
-		const coinbaseTx: Transaction = TxFunctions.getCoinbaseTransaction(getPublicFromWallet(), blockchain.getLastBlock().header.index + 1);
-		const tx: Transaction = createTransaction(receiverAddress, amount, getPrivateFromWallet(), Blockchain.getUnspentTxOuts(unspentTxOuts), TransactionPool.getTransactionPool())
-		const blockData: Transaction[] = [coinbaseTx, tx];
-		return blockData;
 	}
 
 	static isValidBlockStructure(block: Block) {
@@ -101,34 +88,112 @@ export default class Blockchain {
 		if (JSON.stringify(blocks[0]) !== JSON.stringify(Block.getGenesisBlock())) {
 			return false;
 		}
+		let aUnspentTxOuts: UnspentTxOut[] | null = [];
 		for (let i = 1; i < blocks.length; i++) {
 			const currentBlock: Block = blocks[i];
 			const prevBlock: Block = blocks[i - 1];
 			if (!this.isValidNewBlock(currentBlock, prevBlock)) {
 				return false;
 			}
+			aUnspentTxOuts = TxFunctions.processTransactions(currentBlock.data, aUnspentTxOuts, currentBlock.header.index);
+			if(aUnspentTxOuts === null) {
+				console.log("Invalid transactions in blockchain");
+				return false;
+			}
 		}
 		return true;
 	}
 
+	static newBlocksUTXOs(blocks: Block[]) {
+		if (JSON.stringify(blocks[0]) !== JSON.stringify(Block.getGenesisBlock())) {
+			return null;
+		}
+		let aUnspentTxOuts: UnspentTxOut[] | null = [];
+		for (let i = 1; i < blocks.length; i++) {
+			const currentBlock: Block = blocks[i];
+			const prevBlock: Block = blocks[i - 1];
+			if (!this.isValidNewBlock(currentBlock, prevBlock)) {
+				return null;
+			}
+			aUnspentTxOuts = TxFunctions.processTransactions(currentBlock.data, aUnspentTxOuts, currentBlock.header.index);
+			if(aUnspentTxOuts === null) {
+				console.log("Invalid transactions in blockchain");
+				return null;
+			}
+		}
+		return aUnspentTxOuts;
+	}
+
+	static newBlockUnspentTxOuts = (blocks: Block[]): UnspentTxOut[] | null => {
+		let aUnspentTxOuts: UnspentTxOut[] | null = [];
+		for (let i = 1; i < blocks.length; i++) {
+			const currentBlock: Block = blocks[i];
+			const prevBlock: Block = blocks[i - 1];
+			
+			aUnspentTxOuts= TxFunctions.processTransactions(currentBlock.data, aUnspentTxOuts, currentBlock.header.index);
+			if(aUnspentTxOuts === null) {
+				console.log("Invalid transactions in blockchain");
+				return null;
+			}
+		}
+		return aUnspentTxOuts;
+	}
+
+	static getAccumulatedDifficulty = (aBlockchain: Block[]): number => {
+    return aBlockchain
+        .map((block) => block.header.difficulty)
+        // .map((difficulty) => Math.pow(2, difficulty))
+        .reduce((a, b) => a + b);
+	};
+
 	replaceChain(newBlocks: Block[]): boolean {
-		if (newBlocks.length <= this.chain.length) {
-			console.log("No need to replace : New chain is shorter than current one");
-			return false;
-		}
-		if (!Blockchain.isValidChain(newBlocks)) {
-			console.log("No need to replace : New chain is invalid");
-			return false;
-		}
+		const aUnspentTxOuts = Blockchain.newBlocksUTXOs(newBlocks)
+		const validChain: boolean = aUnspentTxOuts !== null;
+		if(validChain &&
+			Blockchain.getAccumulatedDifficulty(newBlocks) > Blockchain.getAccumulatedDifficulty(this.chain)
+			)
 		this.chain = newBlocks;
 		console.log("Replace current chain with new one");
 		return true;
 	}
+	
+	static getBlockData = (receiverAddress: string, amount: number, blockchain:Blockchain, unspentTxOuts: UnspentTxOut[]) => {
+		if (!TxFunctions.isValidAddress(receiverAddress)){
+			throw Error("Invalid address");
+		}
+		if (typeof amount !== 'number') {
+			throw Error("Invalid amount")
+		}
+		const coinbaseTx: Transaction = TxFunctions.getCoinbaseTransaction(getPublicFromWallet(), blockchain.getLastBlock().header.index + 1);
+		const transactions: Transaction[] = TransactionPool.getTransactionPool();
+		const blockData: Transaction[] = [coinbaseTx].concat(transactions);
+		return blockData;
+	}
 
-  static getUnspentTxOuts = (unspentTxOuts: UnspentTxOut[]) => _.cloneDeep(unspentTxOuts);
-  static setUnspentTxOuts = (unspentTxOuts: UnspentTxOut[], newUnspentTxOuts: UnspentTxOut[]) => {
-    console.log("Replacing unspentTxOuts with " + newUnspentTxOuts);
-    unspentTxOuts = newUnspentTxOuts;    
+	
+  static getUnspentTxOuts = (unspentTxOuts: UnspentTxOut[]) => _.cloneDeep(unspentTxOuts)
+  static setUnspentTxOuts = (unspentTxOuts: UnspentTxOut[] | null, newUnspentTxOuts: UnspentTxOut[] | null) => {
+		if(unspentTxOuts !== null && newUnspentTxOuts !== null){
+			console.log("Replacing unspentTxOuts with " + newUnspentTxOuts);
+			unspentTxOuts = newUnspentTxOuts;    
+		} else {
+			throw Error("Invalid unspentTxOuts or newUnspentTxOuts.");
+		}
   }
+
+	static getMyUnspentTxOutputs = (unspentTxOuts: UnspentTxOut[]) => {
+		return findUnspentTxOuts(getPublicFromWallet(), unspentTxOuts)
+	}
+
+	static sendTransaction = (address: string, amount: number, unspentTxOuts: UnspentTxOut[]): Transaction => {
+		const tx: Transaction = createTransaction(address, amount, getPrivateFromWallet(), unspentTxOuts, TransactionPool.getTransactionPool());
+		TransactionPool.addToTransactionPool(tx, unspentTxOuts);
+		// broadcasttransctionPool()
+		return tx;
+	}
   
+	static handleReceivedTransaction = (transaction: Transaction, unspentTxOuts: UnspentTxOut[] | null) => {
+		if (unspentTxOuts === null) throw Error("Invalid unspentTxOuts")
+		TransactionPool.addToTransactionPool(transaction, Blockchain.getUnspentTxOuts(unspentTxOuts));
+	}
 }

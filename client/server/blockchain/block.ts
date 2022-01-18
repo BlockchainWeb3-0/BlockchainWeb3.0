@@ -63,7 +63,7 @@ export default class Block {
         const data: Transaction[] = [genesisTransaction];
         const header = new BlockHeader(
             "0.1.0",
-            1,
+            0,
             "0".repeat(64),
             merkle("sha256")
                 .sync([JSON.stringify(data)])

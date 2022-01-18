@@ -17,14 +17,20 @@ import {
 } from "../p2p/p2p";
 import { cors } from "./cors";
 import user = require("./routes/user");
-import { Transaction, TxFunctions } from "../transaction/transaction";
+import {
+	Transaction,
+	TxFunctions,
+	UnspentTxOut,
+} from "../transaction/transaction";
+import Block from "../blockchain/block";
 
 const blockchain: Blockchain = new Blockchain();
 let unspentTxOuts = TxFunctions.processTransactions(
-	blockchain.chain[0].data,
+	Block.getGenesisBlock().data,
 	[],
 	0
 );
+let transactionPool: Transaction[] = [];
 
 const app = express();
 app.use(helmet());
@@ -50,13 +56,11 @@ const initHttpServer = (port: number) => {
 
 	app.get("/balance", (req: Request, res: Response) => {
 		if (unspentTxOuts !== null) {
-			const balance = getBalance(
-				getPublicFromWallet(),
-				Blockchain.getUnspentTxOuts(unspentTxOuts)
-			);
+			const balance = getBalance(getPublicFromWallet(), unspentTxOuts);
 			res.send({ balance: balance });
 		} else {
-			res.status(400).send("UTXOs : " + unspentTxOuts);
+			res.status(404).send("Invalid unspentTxOuts");
+      throw Error("Invalid unspentTxOuts");
 		}
 	});
 
@@ -88,58 +92,67 @@ const initHttpServer = (port: number) => {
 	app.post("/mineBlock", (req: Request, res: Response) => {
 		const data: any = req.body.data;
 		console.log("mineBlock", data);
-		blockchain.addBlock(data);
-		console.log(blockchain);
+		const newBlock = blockchain.addBlock(data);
 		broadcastLatest();
-		res.send("ok");
-	});
 
-	app.post("/mineBlockWithTx", (req: Request, res: Response) => {
-		const address: string = req.body.address;
-		const amount: number = req.body.amount;
 		if (unspentTxOuts !== null) {
-			const blockData: Transaction[] = Blockchain.createBlockData(
-				address,
-				amount,
-				blockchain,
-				unspentTxOuts
+			const retVal: UnspentTxOut[] | null = TxFunctions.processTransactions(
+				newBlock.data,
+				Blockchain.getUnspentTxOuts(unspentTxOuts),
+				newBlock.header.index
 			);
-			broadcastLatest();
+			Blockchain.setUnspentTxOuts(unspentTxOuts, retVal);
+			TransactionPool.updateTransactionPool(unspentTxOuts);
 			res.send("ok");
 		} else {
-			res.status(400).send("UTXOs : " + unspentTxOuts);
+			res.status(404).send("Invalid unspentTxOuts");
+      throw Error("Invalid unspentTxOuts");
 		}
 	});
 
-  app.post("/addtransaction", (req, res) => {
-    try {
-        const data: any = req.body.data;
-        if (true) {
-            res.send({ message: "success" });
-        } else {
-            res.send({ message: "fail" });
-        }
-    } catch (error) {
-        console.log(error);
-    }
-  });
+	app.post("/sendtransaction", (req, res) => {
+		try {
+			const address: string = req.body.address;
+			const amount: number = req.body.amount;
+			if (address === undefined || amount === undefined) {
+        res.status(404).send("Invalid address or amount");
+        throw Error("Invalid address or amount");
+      }
+      if (unspentTxOuts === null) {
+        res.status(404).send("Invalid unspentTxOuts");
+        throw Error("Invalid unspentTxOuts");
+      } else {
+        const resp = Blockchain.sendTransaction(address, amount, unspentTxOuts)
+        res.send(resp);
+      }
+		} catch (error) {
+			res.status(400).send(error);
+		}
+	});
 
+	// 전체 utxo 불러오기
 	app.get("/utxos", (req: Request, res: Response) => {
 		if (unspentTxOuts !== null) {
 			res.send(Blockchain.getUnspentTxOuts(unspentTxOuts));
 		} else {
-			res.send("null");
+			res.status(404).send("Invalid unspentTxOuts");
+      throw Error("Invalid unspentTxOuts");
 		}
 	});
 
+	// 내 지갑주소에 해당하는 utxo 불러오기
 	app.get("/myutxos", (req: Request, res: Response) => {
-		res.send();
+		if (unspentTxOuts !== null) {
+			res.send(Blockchain.getMyUnspentTxOutputs(unspentTxOuts));
+		} else {
+			res.status(404).send("Invalid unspentTxOuts");
+      throw Error("Invalid unspentTxOuts");
+		}
 	});
 
 	app.get("/transactionPool", (req: Request, res: Response) => {
-		console.log(TransactionPool.getTransactionPool());
-
-		res.send(TransactionPool.getTransactionPool());
+		console.log(transactionPool);
+		res.send(transactionPool);
 	});
 
 	////////////////////////////////////////
@@ -156,4 +169,4 @@ const server = app.listen(http_port, () => {
 initP2PServer(p2p_port);
 
 initWallet();
-export { app, server, blockchain };
+export { app, server, blockchain, unspentTxOuts };
