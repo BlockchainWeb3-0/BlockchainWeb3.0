@@ -393,9 +393,9 @@ class TxFunctions {
 	/**
 	 * updateUnspentTxOuts
 	 * - 새로운 블록이 생성될 때마다 UTXO를 갱신해야 함
-	 * - 새로운 블록에서
 	 * @param newTransactions
 	 * @param aUnspentTxOuts
+	 * @returns 새로운 블록의 UTXO + 소비되지 않은 기존 UTXO
 	 */
 	static updateUnspentTxOuts = (
 		newTransactions: Transaction[],
