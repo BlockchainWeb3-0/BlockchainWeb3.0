@@ -3,6 +3,8 @@ import { Server } from "ws";
 import Block from "../blockchain/block";
 import Blockchain from "../blockchain/blockchain";
 import { blockchain } from "../main/main";
+import { Transaction } from "../transaction/transaction";
+import { TransactionPool } from "../transactionPool/transactionPool";
 
 const sockets: WebSocket[] = [];
 
@@ -10,6 +12,8 @@ enum MessageType {
     QUERY_LATEST,
     QUERY_ALL,
     RESPONSE_BLOCKCHAIN,
+    QUERY_TRANSACTION_POOL,
+    RESPONSE_TRANSACTION_POOL,
 }
 
 class Message {
