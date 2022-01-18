@@ -10,6 +10,7 @@ enum MessageType {
     QUERY_LATEST,
     QUERY_ALL,
     RESPONSE_BLOCKCHAIN,
+    GIVEMEBLOCK,
 }
 
 class Message {
@@ -23,8 +24,6 @@ class Message {
 const getSockets = (): WebSocket[] => {
     return sockets;
 };
-
-getSockets();
 
 const initP2PServer = (p2pPort: number) => {
     const server: Server = new WebSocket.Server({ port: p2pPort });
