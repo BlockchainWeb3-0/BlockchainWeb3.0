@@ -73,10 +73,22 @@ const initHttpServer = (port: number) => {
         res.send("ok");
     });
 
-    app.get("/transactionPool", (req, res) => {
+    app.get("/transactionpool", (req, res) => {
         console.log(getTransactionPool());
 
         res.send(getTransactionPool());
+    });
+    app.post("/addtransaction", (req, res) => {
+        try {
+            const data: any = req.body.data;
+            if (true) {
+                res.send({ message: "success" });
+            } else {
+                res.send({ message: "fail" });
+            }
+        } catch (error) {
+            console.log(error);
+        }
     });
 
     app.post("/addPeer", (req: Request, res: Response) => {

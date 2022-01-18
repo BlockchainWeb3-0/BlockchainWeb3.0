@@ -8,7 +8,16 @@ const Transaction = () => {
     const [address, setAddress] = useState("");
     const [amount, setAmount] = useState(1);
 
-    const addTx = () => {};
+    // const params = {
+    //   method: "post",
+    //   baseURL: "http://localhost:3000",
+    //   url: "/addtransaction",
+    //   data: {data:[{address,amount}] }
+    // }
+
+    const addTx = () => {
+        //const result = await axios.request(params);
+    };
 
     const textOnAddress = (e) => {
         setAddress(e.target.value);
