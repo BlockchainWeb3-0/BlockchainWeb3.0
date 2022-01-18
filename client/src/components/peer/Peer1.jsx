@@ -5,6 +5,7 @@ import { Button, Form } from "react-bootstrap";
 
 const Peer1 = () => {
     const [peerPort, setPeerPort] = useState("6002");
+    const [statePeers, setStatePeers] = useState([]);
 
     const getPeers = async () => {
         const params = {
@@ -13,8 +14,10 @@ const Peer1 = () => {
             url: "/peers",
         };
         const result = await axios.request(params);
-        console.log("Connected peers : ", result.data);
+        //console.log("Connected peers : ", result.data);
+        setStatePeers(result.data);
     };
+    console.log(statePeers);
 
     const addPeers = () => {
         const peerList = peerPort.split(" ");
@@ -36,15 +39,16 @@ const Peer1 = () => {
 
     return (
         <div className="peer_container">
-            <h1>Peer1</h1>
-            <div>(Port: 3001, 6001)</div>
-            <div>
+            <div className="peer_name">Peer1</div>
+            <div className="peer_port">(Port: 3001, Peer: 6001)</div>
+            <div className="peer_getPeers">
                 <Button onClick={getPeers}>Get Peers</Button>
+                {statePeers.join(" , ")}
             </div>
-            <div>
+            <div className="peer_textField">
                 <TextField
                     required
-                    label="Peer Port"
+                    label="Peer Port default : 6002"
                     variant="standard"
                     helperText="Using space to add multiple peers (ex. 6002 6003)"
                     name="port"
