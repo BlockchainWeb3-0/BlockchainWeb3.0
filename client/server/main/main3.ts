@@ -3,12 +3,11 @@ import express = require('express');
 import { Request, Response } from 'express';
 const helmet = require('helmet');
 import 'dotenv/config';
-import cookieParser = require('cookie-parser');
 
 import Blockchain from '../blockchain/blockchain';
 import { getTransactionPool } from '../transactionPool/transactionPool';
 import { getPublicFromWallet, initWallet } from '../wallet/wallet';
-import { initP2PServer, getSockets, connectToPeers, broadcastLatest } from '../p2p/p2p';
+import { initP2PServer, getSockets, connectToPeers, broadcastLatest } from '../p2p/p2p3';
 import { cors } from './cors';
 import user = require('./routes/user');
 
@@ -21,13 +20,11 @@ app.disable('x-powered-by');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cookieParser());
-
 app.use('/api/user', user);
 
-export const http_port: number = parseInt(process.env.HTTP_PORT as string) || 3001;
+export const http_port: number = 3003;
 
-export const p2p_port: number = parseInt(process.env.P2P_PORT as string) || 6001;
+export const p2p_port: number = 6003;
 
 const initHttpServer = (port: number) => {
   app.get('/', (req: Request, res: Response) => {
