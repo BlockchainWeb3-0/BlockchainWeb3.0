@@ -1,7 +1,6 @@
 import cryptojs = require("crypto-js");
 import _ from "lodash";
 import ecdsa = require("elliptic");
-import { getPublicKey } from "./transaction";
 
 const ec = new ecdsa.ec("secp256k1");
 
@@ -379,7 +378,7 @@ class TxFunctions {
 		}
 		const referencedAddress = referencedUnspentTxOut.address;
 
-		if (getPublicKey(privatekey) !== referencedAddress) {
+		if (this.getPublicKey(privatekey) !== referencedAddress) {
 			console.log("Invalid private key!");
 			throw Error();
 		}
@@ -483,7 +482,7 @@ class TxFunctions {
 		return ec
 			.keyFromPrivate(aPrivatekey, "key")
 			.getPublic()
-			.encode("hex", true);
+			.encode("hex", false);
 	};
 
 	static isValidTxInStructure = (txIn: TxIn): boolean => {
@@ -581,3 +580,5 @@ class TxFunctions {
 		return true;
 	}
 }
+
+export {Transaction, TxIn, TxOut, UnspentTxOut, TxFunctions}

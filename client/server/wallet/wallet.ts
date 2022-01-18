@@ -2,9 +2,7 @@ import { ec } from 'elliptic';
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 import _ from 'lodash';
 import {
-  getPublicKey,
-  getTransactionId,
-  signTxIn,
+  TxFunctions,
   Transaction,
   TxIn,
   TxOut,
@@ -140,7 +138,7 @@ const createTransaction = (
   txPool: Transaction[]
 ): Transaction => {
   console.log('txPool: %s', JSON.stringify(txPool));
-  const myAddress: string = getPublicKey(privateKey);
+  const myAddress: string = TxFunctions.getPublicKey(privateKey);
   const myUnspentTxOutsA = unspentTxOuts.filter(
     (uTxO: UnspentTxOut) => uTxO.address === myAddress
   );
@@ -165,10 +163,10 @@ const createTransaction = (
   const tx: Transaction = new Transaction();
   tx.txIns = unsignedTxIns;
   tx.txOuts = createTxOuts(receiverAddress, myAddress, amount, leftOverAmount);
-  tx.id = getTransactionId(tx);
+  tx.id = TxFunctions.getTransactionId(tx);
 
   tx.txIns = tx.txIns.map((txIn: TxIn, index: number) => {
-    txIn.signature = signTxIn(tx, index, privateKey, unspentTxOuts);
+    txIn.signature = TxFunctions.signTxIn(tx, index, privateKey, unspentTxOuts);
     return txIn;
   });
 

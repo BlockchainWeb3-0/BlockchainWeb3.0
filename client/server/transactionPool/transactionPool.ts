@@ -3,7 +3,7 @@ import {
   Transaction,
   TxIn,
   UnspentTxOut,
-  validateTransaction,
+  TxFunctions,
 } from '../transaction/transaction';
 
 let transactionPool: Transaction[] = [];
@@ -16,7 +16,7 @@ const addToTransactionPool = (
   tx: Transaction,
   unspentTxOuts: UnspentTxOut[]
 ) => {
-  if (!validateTransaction(tx, unspentTxOuts)) {
+  if (!TxFunctions.validateTransaction(tx, unspentTxOuts)) {
     throw Error('Trying to add invalid tx to pool');
   }
 
