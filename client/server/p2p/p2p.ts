@@ -157,6 +157,7 @@ const handleBlockchainResponse = (receivedBlocks: Block[]) => {
     } else {
       console.log('Received blockchain is longer than current blockchain');
       blockchain.replaceChain(receivedBlocks);
+      broadcast(responseLatestMsg());
     }
   } else {
     console.log('received blockchain is not longer than received blockchain. Do nothing');
