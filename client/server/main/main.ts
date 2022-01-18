@@ -111,6 +111,19 @@ const initHttpServer = (port: number) => {
 		}
 	});
 
+  app.post("/addtransaction", (req, res) => {
+    try {
+        const data: any = req.body.data;
+        if (true) {
+            res.send({ message: "success" });
+        } else {
+            res.send({ message: "fail" });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+  });
+
 	app.get("/utxos", (req: Request, res: Response) => {
 		if (unspentTxOuts !== null) {
 			res.send(Blockchain.getUnspentTxOuts(unspentTxOuts));
