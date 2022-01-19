@@ -21,6 +21,7 @@ const MempoolPeer = ({
                     onClick={(e) => {
                         start(port, address, e);
                     }}
+                    variant={intervalId ? "danger" : "primary"}
                 >
                     Auto Mining {intervalId ? "Stop" : "Start"}
                 </Button>

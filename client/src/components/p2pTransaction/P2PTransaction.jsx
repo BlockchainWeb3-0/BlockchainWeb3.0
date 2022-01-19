@@ -15,6 +15,10 @@ const P2PTransaction = ({ peer }) => {
 	const [privatekey, setPrivatekey] = useState(initPrivatekey);
 	const [receiverAddress, setReceiverAddress] = useState(1);
 	const [amount, setAmount] = useState(1);
+    const [peerUTXOs, setPeerUTXOs] = useState([]);
+	const [loading, setLoading] = useState(true);
+    const [balance, setBalance] = useState(0);
+
     
     const renewWalletKeys = () => {
         const peerWalletKeys = generatePeerWallet();
@@ -51,17 +55,52 @@ const P2PTransaction = ({ peer }) => {
 		setAmount(parseInt(e.target.value));
 	};
 
+    const getPeerUTXOs = async (address) => {
+		try {
+			const { data } = await axios({
+				method: "get",
+				baseURL: `http://localhost:3001`,
+				url: `/myutxos/${publickey}`,
+			});
+			setPeerUTXOs(data);
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setLoading(false);
+		}
+	};
+    const getBalance = async () => {
+        const result = await axios.request({
+            method: "get",
+            baseURL: "http://localhost:3001",
+            url: `balance/${publickey}`,
+        });
+        setBalance(result.data.balance);
+    };
+
+    useEffect(()=> {
+        getBalance();
+    }, [balance])
+
 	return (
 		<div className="transaction_container">
 			<div className="transaction_title">Port {port}</div>
 			<div className="transaction_textField">
+                <TextField
+					required
+					label="Balance"
+					variant="standard"
+					name="address"
+					sx={{ width: "10%", displayPrint: "block" }}
+                    value={balance}
+				/>
 				<TextField
 					required
 					label="Wallet Address"
 					variant="standard"
 					name="address"
 					onChange={textOnPublickey}
-					sx={{ width: "100%", displayPrint: "block" }}
+					sx={{ width: "100%", displayPrint: "block", marginTop: "20px", }}
                     value={publickey}
 				/>
 				<TextField
