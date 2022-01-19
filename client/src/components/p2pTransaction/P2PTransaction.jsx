@@ -54,9 +54,8 @@ const P2PTransaction = () => {
 
         return (
             <div className="transaction_container">
-                <div className="transaction_title">p2pTransaction page!</div>
+                <div className="transaction_title">Transaction page!</div>
                 <div className="transaction_textField">
-                    내 주소 : {user.address}
                     <TextField
                         required
                         label="Wallet Address"
