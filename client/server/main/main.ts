@@ -181,9 +181,6 @@ const initHttpServer = (port: number) => {
                 amount: number;
             }
             const { address, privateKey, amount }: TxData = req.body;
-            console.log(address);
-            console.log(privateKey);
-            console.log(amount);
             if (
                 address === undefined ||
                 amount === undefined ||
@@ -222,10 +219,6 @@ const initHttpServer = (port: number) => {
 
             const { TxInAddress, TxOutAddress, amount, sign }: TxData =
                 req.body;
-            console.log(TxInAddress);
-            console.log(TxOutAddress);
-            console.log(amount);
-            console.log(sign);
             if (
                 TxInAddress === undefined ||
                 TxOutAddress == undefined ||

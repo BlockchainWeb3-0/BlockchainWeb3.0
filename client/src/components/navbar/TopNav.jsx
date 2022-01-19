@@ -35,11 +35,8 @@ function TopNav() {
                                     <Link to="/mempool">Mempool</Link>
                                 </Nav>
                                 <Nav>
-                                    <Link to="/transaction">Transaction</Link>
-                                </Nav>
-                                <Nav>
                                     <Link to="/p2ptransaction">
-                                        testing....
+                                        Transaction
                                     </Link>
                                 </Nav>
                             </Nav>
@@ -88,15 +85,12 @@ function TopNav() {
                                     <Link to="/mempool">Mempool</Link>
                                 </Nav>
                                 <Nav>
-                                    <Link to="/transaction">Transaction</Link>
+                                    <Link to="/p2ptransaction">
+                                        Transaction
+                                    </Link>
                                 </Nav>
                                 <Nav>
                                     <Link to="/peer">Peer</Link>
-                                </Nav>
-                                <Nav>
-                                    <Link to="/p2ptransaction">
-                                        testing....
-                                    </Link>
                                 </Nav>
                             </Nav>
                             <Nav>
