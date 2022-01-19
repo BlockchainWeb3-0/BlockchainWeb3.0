@@ -145,7 +145,7 @@ const queryTransactionPoolMsg = (): Message => ({
 });
 const responseTransactionPoolMsg = (): Message => ({
 	type: MessageType.RESPONSE_TRANSACTION_POOL,
-	data: JSON.stringify(TransactionPool.getTransactionPool(transactionPool)),
+	data: JSON.stringify(transactionPool),
 });
 
 
