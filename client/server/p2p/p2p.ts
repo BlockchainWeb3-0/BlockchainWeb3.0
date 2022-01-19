@@ -44,15 +44,15 @@ const initConnection = (ws: WebSocket) => {
     write(ws, queryChainLengthMsg());
 
     // Blockchain query한 다음, 일정시간 이후 transaction pool query
-    setTimeout(()=>{
+    setTimeout(() => {
         broadcast(queryTransactionPoolMsg());
-    }, 500)
+    }, 500);
 };
 
 const JSONToObject = <T>(data: string): T => {
     try {
         return JSON.parse(data);
-    } catch (err: any) {
+    } catch (err: any | unknown) {
         console.log(err);
         return err;
     }
@@ -92,19 +92,27 @@ const initMessageHandler = (ws: WebSocket) => {
                     write(ws, responseTransactionPoolMsg());
                     break;
                 case MessageType.RESPONSE_TRANSACTION_POOL:
-                    const receivedTransactions: Transaction[] = JSONToObject<Transaction[]>(message.data);
+                    const receivedTransactions: Transaction[] = JSONToObject<
+                        Transaction[]
+                    >(message.data);
                     if (receivedTransactions == null) {
-                        console.log("Invalid transaction received: ", JSON.stringify(message.data));
+                        console.log(
+                            "Invalid transaction received: ",
+                            JSON.stringify(message.data)
+                        );
                         break;
                     }
                     receivedTransactions.forEach((transaction: Transaction) => {
                         try {
-                            Blockchain.handleReceivedTransaction(transaction, unspentTxOuts);
+                            Blockchain.handleReceivedTransaction(
+                                transaction,
+                                unspentTxOuts
+                            );
                             broadcastTransctionPool();
                         } catch (error) {
                             console.log(error);
                         }
-                    })
+                    });
                     break;
             }
         } catch (e) {
@@ -140,14 +148,13 @@ const responseLatestMsg = (): Message => ({
 
 // transaction pool을 위한 통신
 const queryTransactionPoolMsg = (): Message => ({
-	type: MessageType.QUERY_TRANSACTION_POOL,
-	data: null,
+    type: MessageType.QUERY_TRANSACTION_POOL,
+    data: null,
 });
 const responseTransactionPoolMsg = (): Message => ({
-	type: MessageType.RESPONSE_TRANSACTION_POOL,
-	data: JSON.stringify(TransactionPool.getTransactionPool()),
+    type: MessageType.RESPONSE_TRANSACTION_POOL,
+    data: JSON.stringify(TransactionPool.getTransactionPool()),
 });
-
 
 const initErrorHandler = (ws: WebSocket) => {
     const closeConnection = (myWs: WebSocket) => {
@@ -191,8 +198,11 @@ const handleBlockchainResponse = (receivedBlocks: Block[]) => {
                 "Received blockchain is longer than current blockchain"
             );
             blockchain.replaceChain(receivedBlocks);
-            Blockchain.setUnspentTxOuts(unspentTxOuts, Blockchain.newBlockUnspentTxOuts(receivedBlocks));
-            TransactionPool.updateTransactionPool(unspentTxOuts)
+            Blockchain.setUnspentTxOuts(
+                unspentTxOuts,
+                Blockchain.newBlockUnspentTxOuts(receivedBlocks)
+            );
+            TransactionPool.updateTransactionPool(unspentTxOuts);
             broadcast(responseLatestMsg());
         }
     } else {
@@ -221,7 +231,13 @@ const connectToPeers = (newPeers: string[]): void => {
 };
 
 const broadcastTransctionPool = () => {
-	broadcast(responseTransactionPoolMsg());
-}
+    broadcast(responseTransactionPoolMsg());
+};
 
-export { connectToPeers, broadcastLatest, broadcastTransctionPool, initP2PServer, getSockets };
+export {
+    connectToPeers,
+    broadcastLatest,
+    broadcastTransctionPool,
+    initP2PServer,
+    getSockets,
+};
