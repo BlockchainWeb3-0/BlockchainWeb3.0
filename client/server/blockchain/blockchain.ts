@@ -198,7 +198,7 @@ export default class Blockchain {
             throw Error("Invalid address");
         }
         const coinbaseTx: Transaction = TxFunctions.getCoinbaseTransaction(
-            getPublicFromWallet(),
+            receiverAddress,
             blockchain.getLastBlock().header.index + 1
         );
         const transactions: Transaction[] = transactionPool;
