@@ -8,7 +8,6 @@ import { useCookies } from "react-cookie";
 
 import jwtDecode from "jwt-decode";
 import _ from "lodash";
-import "./topNav.scss"
 
 function TopNav() {
     const [show, setShow] = useState(false);
