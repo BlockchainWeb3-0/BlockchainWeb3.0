@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Spinner } from 'react-bootstrap';
 import useAxios from '../../hooks/useAxios';
 import './Blocks.scss';
 import Cube from './Cube';
@@ -31,7 +32,7 @@ const Blocks = () => {
   if (blocks.loading || blocks2.loading || blocks3.loading) {
     return (
       <>
-        <h1>Loading...</h1>
+        <Spinner animation="border" variant="dark" />
       </>
     );
   } else {
