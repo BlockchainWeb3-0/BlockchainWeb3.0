@@ -18,6 +18,7 @@ const Mempool = () => {
     const [loading3, setLoading3] = useState(true);
     const [tokenUser, setTokenUser, removeCookie] = useCookies(["x_auth"]);
     const [miningMode, setMiningMode] = useState(false);
+    const [intervalId, setIntervalId] = useState(0);
 
     const txPool = async () => {
         const txPoolData = await axios(getTxPoolParams(3001));
@@ -34,18 +35,6 @@ const Mempool = () => {
         setData3(txPoolData.data);
         setLoading3(false);
     };
-
-    const toggleMiningMode = () => {
-        setMiningMode(!miningMode)
-    }
-
-    const autoMining = () => {
-        
-    }
-
-    useEffect(()=>{
-        autoMining();
-    }, [miningMode])
 
     useEffect(() => {
         txPool();
@@ -85,6 +74,19 @@ const Mempool = () => {
     const mining = async (params) => {
         await axios(params);
     };
+    const start = (port, e) => {
+        if (intervalId) {
+            clearInterval(intervalId);
+            setIntervalId(0);
+            return;
+        }
+        const newIntervalId = setInterval(() => {
+            mining(getMiningParams(port, address));
+        }, 1500);
+        setIntervalId(newIntervalId);
+        e.preventDefault();
+    };
+    //clearInterval(intervalId);
 
     const miningClick = (port, address) => {
         mining(getMiningParams(port, address));
@@ -103,18 +105,22 @@ const Mempool = () => {
                     port={3001}
                     handleOnClick={() => miningClick(3001, address)}
                     loading={loading}
+                    start={start}
                 />
+
                 <MempoolPeer
                     data={data2}
                     port={3002}
                     handleOnClick={() => miningClick(3002, address)}
                     loading={loading2}
+                    start={start}
                 />
                 <MempoolPeer
                     data={data3}
                     port={3003}
                     handleOnClick={() => miningClick(3003, address)}
                     loading={loading3}
+                    start={start}
                 />
             </div>
         </div>
