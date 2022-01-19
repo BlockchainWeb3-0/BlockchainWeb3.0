@@ -8,7 +8,13 @@ import _ = require("lodash");
 
 import Blockchain from "../blockchain/blockchain";
 import { TransactionPool } from "../transactionPool/transactionPool";
-import { getBalance, getPublicFromWallet, initWallet } from "../wallet/wallet";
+import {
+    findUnspentTxOuts,
+    generatePrivateKey,
+    getBalance,
+    getPublicFromWallet,
+    initWallet,
+} from "../wallet/wallet";
 import {
     initP2PServer,
     getSockets,
@@ -23,6 +29,9 @@ import {
     UnspentTxOut,
 } from "../transaction/transaction";
 import Block from "../blockchain/block";
+import { ec } from "elliptic";
+
+const EC = new ec("secp256k1");
 
 const blockchain: Blockchain = new Blockchain();
 let unspentTxOuts = TxFunctions.processTransactions(
@@ -97,9 +106,16 @@ const initHttpServer = (port: number) => {
         console.log(data);
         res.send(data);
     });
+    app.get("/addwallet", (req: Request, res: Response) => {
+        const privatekey = generatePrivateKey();
+        const key = EC.keyFromPrivate(privatekey, "hex");
+        const publickey = key.getPublic().encode("hex", false);
+        res.send({ data: { publickey, privatekey } });
+    });
 
     app.post("/mineBlock", (req: Request, res: Response) => {
         const address: string = req.body.address;
+        console.log(address);
         const data: Transaction[] = Blockchain.getBlockData(
             address,
             blockchain,
@@ -164,7 +180,11 @@ const initHttpServer = (port: number) => {
                 amount: number;
             }
             const { address, privateKey, amount }: TxData = req.body;
-            if (address === undefined || amount === undefined) {
+            if (
+                address === undefined ||
+                amount === undefined ||
+                privateKey == undefined
+            ) {
                 res.status(404).send("Invalid address or amount");
                 throw Error("Invalid address or amount");
             }
@@ -179,8 +199,73 @@ const initHttpServer = (port: number) => {
                     unspentTxOuts,
                     transactionPool
                 );
+                console.log("asd1111f");
                 res.send(newTransaciton);
             }
+        } catch (error) {
+            res.status(400).send("Sending transaction faild");
+        }
+    });
+
+    app.post("/p2psendtransaction", (req, res) => {
+        try {
+            interface TxData {
+                TxInAddress: string;
+                TxOutAddress: string;
+                amount: number;
+                sign: string;
+            }
+
+            const { TxInAddress, TxOutAddress, amount, sign }: TxData =
+                req.body;
+
+            console.log("TxInAddress :", TxInAddress);
+            console.log("TxOutAddress", TxOutAddress);
+            console.log("amount", amount);
+            console.log("sign", sign);
+            if (
+                TxInAddress === undefined ||
+                TxOutAddress == undefined ||
+                amount == undefined ||
+                sign === undefined
+            ) {
+                res.status(404).send(
+                    "Invalid TxInAddress or TxOutAddress or amount or sign"
+                );
+                throw Error(
+                    "Invalid TxInAddress or TxOutAddress or amount or sign"
+                );
+            }
+            if (unspentTxOuts === null) {
+                res.status(404).send("Invalid unspentTxOuts");
+                throw Error("Invalid unspentTxOuts");
+            } else {
+                const newTransaciton = Blockchain.p2pSendTransaction(
+                    TxOutAddress,
+                    amount,
+                    sign,
+                    unspentTxOuts,
+                    transactionPool,
+                    TxInAddress
+                );
+                res.send(newTransaciton);
+            }
+            // if (address === undefined || amount === undefined) {
+            //     res.status(404).send("Invalid address or amount");
+            //     throw Error("Invalid address or amount");
+            // }
+            // if (unspentTxOuts === null) {
+            //     res.status(404).send("Invalid unspentTxOuts");
+            //     throw Error("Invalid unspentTxOuts");
+            // } else {
+            //     const newTransaciton = Blockchain.sendTransaction(
+            //         address,
+            //         amount,
+            //         unspentTxOuts,
+            //         transactionPool
+            //     );
+            //     res.send(newTransaciton);
+            // }
         } catch (error) {
             res.status(400).send("Sending transaction faild");
         }
@@ -205,6 +290,18 @@ const initHttpServer = (port: number) => {
             throw Error("Invalid unspentTxOuts");
         }
     });
+    app.get("/myutxos/:address", (req: Request, res: Response) => {
+        if (unspentTxOuts !== null) {
+            const myUTXOs = findUnspentTxOuts(
+                req.params.address,
+                unspentTxOuts
+            );
+            res.send(myUTXOs);
+        } else {
+            res.status(404).send("Invalid unspentTxOuts");
+            throw Error("Invalid unspentTxOuts");
+        }
+    });
 
     app.get("/transactionPool", (req: Request, res: Response) => {
         console.log(transactionPool);
@@ -223,6 +320,5 @@ const server = app.listen(http_port, () => {
 });
 
 initP2PServer(p2p_port);
-
 initWallet();
 export { app, server, blockchain, unspentTxOuts, transactionPool };
