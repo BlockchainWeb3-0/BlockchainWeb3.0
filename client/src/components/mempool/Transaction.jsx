@@ -24,7 +24,7 @@ const Transaction = ({ tx, index }) => {
 					<div>
 						<h3>Transaction Outputs</h3>
 						{tx.txOuts.map((txOut, index) => (
-							<TxIn key={index} txOut={txOut} />
+							<TxOut key={index} txOut={txOut} index={index}/>
 						))}
 					</div>
 				</Accordion.Body>

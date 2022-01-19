@@ -35,21 +35,9 @@ const Mempool = () => {
 		return txPoolData.data
 	}
 
-	const txPool = useAxios({
-		method: "get",
-		baseURL: "http://localhost:3001",
-		url: "/transactionPool",
-	});
-	const txPool2 = useAxios({
-		method: "get",
-		baseURL: "http://localhost:3002",
-		url: "/transactionPool",
-	});
-	const txPool3 = useAxios({
-		method: "get",
-		baseURL: "http://localhost:3003",
-		url: "/transactionPool",
-	});
+	const txPool = useAxios(getTxPoolParams(3001));
+	const txPool2 = useAxios(getTxPoolParams(3002));
+	const txPool3 = useAxios(getTxPoolParams(3003));
 
 	const miningClick = (port, address) => {
 		mining(getMiningParams(port, address));
