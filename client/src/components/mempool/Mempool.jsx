@@ -7,11 +7,11 @@ import _ from "lodash";
 
 const Mempool = () => {
     const address1 =
-        "042b69d0cfaadaa495939ba003a0e2ecc5789f45bf7acbcbacae6b12f715bf6723aee9e5394073da0d4aab396d45a95a8e2743555fd481628d5b2aab9260b7ca58";
+        "04c34973f019445f48e2b6e05588006773c4daf404cf8803208ed8eac9f9b85be31d90f3d795bc23c6c92a95946b47b2e7a8d00f5a9b5c4e4968746813c3e1542e";
     const address2 =
-        "044c7119c90a9fd2d314cec6a6c709e69d2e05315a4a4319c00ad6446e4ba2358ecb4b80660912005555a9a8d20d4c6886003f093cb5fe7140f87ad04e1b1533b6";
+        "0450987f08b0bc0b6edf7c484ae497b5fcfbf2ca7e6ac7efb87092df9d996ac9a23911824d377c07f14208e500005eb03526ffb8ad3ccfe3c0fe4d7a8157b2fb90";
     const address3 =
-        "046e4f997621d59bd91768fababa987d13cafb73cb41a6c51fc736db383193b2f27f0d07c7f6a981f412505d79099f74dfffe830e0e212b275847e743b3e56262a";
+        "04edeaa78d807fe53ba04abdbd9fcd4de511675abfde44a0c4eca681a677911734dff709909cc7a928ead49e92791f8d2dd557682e11e309657cc2fb2a04fd117e";
 
     const [data, setData] = useState(undefined);
     const [loading, setLoading] = useState(true);
@@ -19,7 +19,6 @@ const Mempool = () => {
     const [loading2, setLoading2] = useState(true);
     const [data3, setData3] = useState(undefined);
     const [loading3, setLoading3] = useState(true);
-    const [miningMode, setMiningMode] = useState(false);
     const [intervalId1, setIntervalId1] = useState(0);
     const [intervalId2, setIntervalId2] = useState(0);
     const [intervalId3, setIntervalId3] = useState(0);

@@ -2,7 +2,7 @@ import "./P2PTransaction.scss";
 import { TextField } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Form, Spinner } from "react-bootstrap";
+import { Accordion, Button, Form, Spinner } from "react-bootstrap";
 import { ec } from "elliptic";
 import MyUTXO from "../wallet/MyUTXO";
 
@@ -152,13 +152,20 @@ const P2PTransaction = ({ peer }) => {
 				>
 					New Wallet address
 				</Button>
-				{loading ? (
-					<Spinner animation="border" variant="dark" />
-				) : (
-					peerUTXOs.map((utxo, index) => (
-						<MyUTXO key={index} utxo={utxo} index={index} />
-					))
-				)}
+				<Accordion>
+					<Accordion.Item>
+						<Accordion.Header>UTXOs</Accordion.Header>
+						<Accordion.Body>
+							{loading ? (
+								<Spinner animation="border" variant="dark" />
+							) : (
+								peerUTXOs.map((utxo, index) => (
+									<MyUTXO key={index} utxo={utxo} index={index} />
+								))
+							)}
+						</Accordion.Body>
+					</Accordion.Item>
+				</Accordion>
 			</div>
 		</div>
 	);
@@ -166,7 +173,7 @@ const P2PTransaction = ({ peer }) => {
 
 const generatePeerWallet = () => {
     const keyPair = EC.genKeyPair();
-    const privateKey = keyPair.getPrivate();
+    const privateKey = keyPair.getPrivate().toString(16);
     const key = EC.keyFromPrivate(privateKey, "hex");
     const publicKey = key.getPublic().encode("hex", false);
 

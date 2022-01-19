@@ -386,6 +386,11 @@ class TxFunctions {
         const referencedAddress = referencedUnspentTxOut.address;
 
         if (this.getPublicKey(privatekey) !== referencedAddress) {
+            console.log("@@@@@@@@@@@");
+            console.log(privatekey);
+            console.log(this.getPublicKey(privatekey));
+            console.log(referencedAddress);
+            
             console.log("Invalid private key!");
             throw Error();
         }
