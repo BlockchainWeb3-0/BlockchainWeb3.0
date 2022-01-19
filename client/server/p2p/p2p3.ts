@@ -163,8 +163,6 @@ const handleBlockchainResponse = (receivedBlocks: Block[]) => {
         console.log("received block chain size of 0");
         return;
     }
-    console.log("####", receivedBlocks);
-
     const latestBlockReceived: Block =
         receivedBlocks[receivedBlocks.length - 1];
     if (!Blockchain.isValidBlockStructure(latestBlockReceived)) {

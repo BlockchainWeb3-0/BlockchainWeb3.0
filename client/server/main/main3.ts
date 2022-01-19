@@ -172,40 +172,40 @@ const initHttpServer = (port: number) => {
         }
     });
 
-    app.post("/sendtransaction", (req, res) => {
-        try {
-            interface TxData {
-                address: string;
-                privateKey: string;
-                amount: number;
-            }
-            const { address, privateKey, amount }: TxData = req.body;
-            if (
-                address === undefined ||
-                amount === undefined ||
-                privateKey == undefined
-            ) {
-                res.status(404).send("Invalid address or amount");
-                throw Error("Invalid address or amount");
-            }
-            if (unspentTxOuts === null) {
-                res.status(404).send("Invalid unspentTxOuts");
-                throw Error("Invalid unspentTxOuts");
-            } else {
-                const newTransaciton = Blockchain.sendTransaction(
-                    address,
-                    amount,
-                    privateKey,
-                    unspentTxOuts,
-                    transactionPool
-                );
-                console.log("asd1111f");
-                res.send(newTransaciton);
-            }
-        } catch (error) {
-            res.status(400).send("Sending transaction faild");
-        }
-    });
+    // app.post("/sendtransaction", (req, res) => {
+    //     try {
+    //         interface TxData {
+    //             address: string;
+    //             privateKey: string;
+    //             amount: number;
+    //         }
+    //         const { address, privateKey, amount }: TxData = req.body;
+    //         if (
+    //             address === undefined ||
+    //             amount === undefined ||
+    //             privateKey == undefined
+    //         ) {
+    //             res.status(404).send("Invalid address or amount");
+    //             throw Error("Invalid address or amount");
+    //         }
+    //         if (unspentTxOuts === null) {
+    //             res.status(404).send("Invalid unspentTxOuts");
+    //             throw Error("Invalid unspentTxOuts");
+    //         } else {
+    //             const newTransaciton = Blockchain.sendTransaction(
+    //                 address,
+    //                 amount,
+    //                 privateKey,
+    //                 unspentTxOuts,
+    //                 transactionPool
+    //             );
+    //             console.log("asd1111f");
+    //             res.send(newTransaciton);
+    //         }
+    //     } catch (error) {
+    //         res.status(400).send("Sending transaction faild");
+    //     }
+    // });
 
     app.post("/p2psendtransaction", (req, res) => {
         try {

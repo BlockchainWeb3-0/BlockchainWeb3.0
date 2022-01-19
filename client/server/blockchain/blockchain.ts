@@ -141,6 +141,8 @@ export default class Blockchain {
                 aUnspentTxOuts,
                 currentBlock.header.index
             );
+            console.log(123123123123);
+            
             if (aUnspentTxOuts === null) {
                 console.log("Invalid transactions in blockchain");
                 return null;

@@ -20,6 +20,7 @@ import {
     getSockets,
     connectToPeers,
     broadcastLatest,
+    broadcastTransctionPool,
 } from "../p2p/p2p";
 import { cors } from "./cors";
 import user = require("./routes/user");
@@ -245,24 +246,10 @@ const initHttpServer = (port: number) => {
                     transactionPool,
                     TxInAddress
                 );
+                broadcastTransctionPool();
                 res.send(newTransaciton);
             }
-            // if (address === undefined || amount === undefined) {
-            //     res.status(404).send("Invalid address or amount");
-            //     throw Error("Invalid address or amount");
-            // }
-            // if (unspentTxOuts === null) {
-            //     res.status(404).send("Invalid unspentTxOuts");
-            //     throw Error("Invalid unspentTxOuts");
-            // } else {
-            //     const newTransaciton = Blockchain.sendTransaction(
-            //         address,
-            //         amount,
-            //         unspentTxOuts,
-            //         transactionPool
-            //     );
-            //     res.send(newTransaciton);
-            // }
+            
         } catch (error) {
             res.status(400).send("Sending transaction faild");
         }
