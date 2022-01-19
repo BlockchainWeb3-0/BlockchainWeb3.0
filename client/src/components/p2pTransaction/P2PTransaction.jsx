@@ -8,7 +8,7 @@ import { useCookies } from "react-cookie";
 import jwtDecode from "jwt-decode";
 import _ from "lodash";
 
-const P2PTransaction = () => {
+const P2PTransaction = ({ peer }) => {
     const [address, setAddress] = useState("");
     const [amount, setAmount] = useState(1);
     const [privatekey, setPrivatekey] = useState("");
@@ -28,7 +28,7 @@ const P2PTransaction = () => {
 
         const params = {
             method: "post",
-            baseURL: "http://localhost:3001",
+            baseURL: `http://localhost:${peer}`,
             url: "/p2psendtransaction",
             data: {
                 TxInAddress: user.address,
@@ -54,7 +54,9 @@ const P2PTransaction = () => {
 
         return (
             <div className="transaction_container">
-                <div className="transaction_title">Transaction page!</div>
+                <div className="transaction_title">
+                    Transaction page! port: {peer}
+                </div>
                 <div className="transaction_textField">
                     <TextField
                         required

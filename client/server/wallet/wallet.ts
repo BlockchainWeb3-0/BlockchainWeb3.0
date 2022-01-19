@@ -190,7 +190,7 @@ const createTransaction2 = (
     privateKey: string,
     unspentTxOuts: UnspentTxOut[],
     txPool: Transaction[],
-    myAddr: string,
+    myAddr: string
 ): Transaction => {
     console.log("txPool: %s", JSON.stringify(txPool));
 
@@ -201,6 +201,7 @@ const createTransaction2 = (
     );
 
     const myUnspentTxOuts = filterTxPoolTxs(myUnspentTxOutsA, txPool);
+    console.log("내 UTXO : ", myUnspentTxOuts);
 
     // filter from unspentOutputs such inputs that are referenced in pool
     const { includedUnspentTxOuts, leftOverAmount } = findTxOutsForAmount(

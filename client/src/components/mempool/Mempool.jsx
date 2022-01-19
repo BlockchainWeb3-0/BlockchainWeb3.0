@@ -21,19 +21,19 @@ const Mempool = () => {
 
     const txPool = async () => {
         const txPoolData = await axios(getTxPoolParams(3001));
-        setData(txPoolData.data)
+        setData(txPoolData.data);
         setLoading(false);
-    }
+    };
     const txPool2 = async () => {
         const txPoolData = await axios(getTxPoolParams(3002));
-        setData2(txPoolData.data)
+        setData2(txPoolData.data);
         setLoading2(false);
-    }
+    };
     const txPool3 = async () => {
         const txPoolData = await axios(getTxPoolParams(3003));
-        setData3(txPoolData.data)
+        setData3(txPoolData.data);
         setLoading3(false);
-    }
+    };
 
     const toggleMiningMode = () => {
         setMiningMode(!miningMode)
@@ -51,8 +51,8 @@ const Mempool = () => {
         txPool();
         txPool2();
         txPool3();
-    }, [])
-    
+    }, []);
+
     if (_.isEmpty(tokenUser)) {
         return (
             <>
@@ -63,7 +63,7 @@ const Mempool = () => {
         );
     }
     const userData = jwtDecode(tokenUser.x_auth);
-    const address = userData.address
+    const address = userData.address;
     const getMiningParams = (port, addr) => {
         return {
             method: "post",

@@ -255,7 +255,7 @@ export default class Blockchain {
         privateKey: string,
         unspentTxOuts: UnspentTxOut[],
         transactionPool: Transaction[],
-        myAddress: string,
+        myAddress: string
     ): Transaction => {
         const tx: Transaction = createTransaction2(
             address,
@@ -263,7 +263,7 @@ export default class Blockchain {
             privateKey,
             unspentTxOuts,
             transactionPool,
-            myAddress,
+            myAddress
         );
         TransactionPool.addToTransactionPool(
             tx,
