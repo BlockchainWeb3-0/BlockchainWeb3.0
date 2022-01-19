@@ -9,6 +9,7 @@ const MempoolPeer = ({
     port,
     start,
     intervalId,
+    address,
 }) => {
     return (
         <div className="mempool-peer">
@@ -18,7 +19,7 @@ const MempoolPeer = ({
                 </Button>
                 <Button
                     onClick={(e) => {
-                        start(port, e);
+                        start(port, address, e);
                     }}
                 >
                     Auto Mining {intervalId ? "Stop" : "Start"}
