@@ -8,6 +8,7 @@ import {
 } from "../transaction/transaction";
 import {
     createTransaction,
+    createTransaction2,
     findUnspentTxOuts,
     getBalance,
     getPrivateFromWallet,
@@ -253,14 +254,16 @@ export default class Blockchain {
         amount: number,
         privateKey: string,
         unspentTxOuts: UnspentTxOut[],
-        transactionPool: Transaction[]
+        transactionPool: Transaction[],
+        myAddress: string,
     ): Transaction => {
-        const tx: Transaction = createTransaction(
+        const tx: Transaction = createTransaction2(
             address,
             amount,
             privateKey,
             unspentTxOuts,
-            transactionPool
+            transactionPool,
+            myAddress,
         );
         TransactionPool.addToTransactionPool(
             tx,

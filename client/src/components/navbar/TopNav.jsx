@@ -8,6 +8,7 @@ import { useCookies } from "react-cookie";
 
 import jwtDecode from "jwt-decode";
 import _ from "lodash";
+import "./topNav.scss"
 
 function TopNav() {
     const [show, setShow] = useState(false);
@@ -21,7 +22,7 @@ function TopNav() {
     if (_.isEmpty(tokenUser)) {
         return (
             <>
-                <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+                <Navbar className="top-nav-container" collapseOnSelect expand="lg" bg="dark" variant="dark">
                     <Container>
                         <Navbar.Brand href="/">Spider Coin 🕷</Navbar.Brand>
                         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -71,7 +72,7 @@ function TopNav() {
 
         return (
             <>
-                <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+                <Navbar className="top-nav-container" collapseOnSelect expand="lg" bg="dark" variant="dark">
                     <Container>
                         <Navbar.Brand href="/">Spider Coin 🕷</Navbar.Brand>
                         <Navbar.Toggle aria-controls="responsive-navbar-nav" />

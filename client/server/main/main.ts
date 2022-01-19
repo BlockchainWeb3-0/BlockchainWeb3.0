@@ -9,6 +9,7 @@ import _ = require("lodash");
 import Blockchain from "../blockchain/blockchain";
 import { TransactionPool } from "../transactionPool/transactionPool";
 import {
+    findUnspentTxOuts,
     generatePrivateKey,
     getBalance,
     getPublicFromWallet,
@@ -236,12 +237,13 @@ const initHttpServer = (port: number) => {
                 res.status(404).send("Invalid unspentTxOuts");
                 throw Error("Invalid unspentTxOuts");
             } else {
-                const newTransaciton = Blockchain.sendTransaction(
+                const newTransaciton = Blockchain.p2pSendTransaction(
                     TxOutAddress,
                     amount,
                     sign,
                     unspentTxOuts,
-                    transactionPool
+                    transactionPool,
+                    TxInAddress
                 );
                 res.send(newTransaciton);
             }
@@ -280,6 +282,15 @@ const initHttpServer = (port: number) => {
     app.get("/myutxos", (req: Request, res: Response) => {
         if (unspentTxOuts !== null) {
             res.send(Blockchain.getMyUnspentTxOutputs(unspentTxOuts));
+        } else {
+            res.status(404).send("Invalid unspentTxOuts");
+            throw Error("Invalid unspentTxOuts");
+        }
+    });
+    app.get("/myutxos/:address", (req: Request, res: Response) => {
+        if (unspentTxOuts !== null) {
+            const myUTXOs = findUnspentTxOuts(req.params.address, unspentTxOuts)
+            res.send(myUTXOs);
         } else {
             res.status(404).send("Invalid unspentTxOuts");
             throw Error("Invalid unspentTxOuts");
