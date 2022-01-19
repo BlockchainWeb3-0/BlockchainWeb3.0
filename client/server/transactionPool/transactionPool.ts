@@ -115,13 +115,16 @@ class TransactionPool {
 			_.find(
 				txPoolIns,
 				(txPoolIns) =>
-					txIn.txOutIndex === txPoolIns.txOutIndex &&
+					txIn.txOutId === txPoolIns.txOutId &&
 					txIn.txOutIndex === txPoolIns.txOutIndex
 			);
 
 		for (const txIn of tx.txIns) {
 			if (containsTxIn(txPoolIns, txIn)) {
 				console.log("txIn already found in the transaction pool");
+				console.log(txIn.txOutId);
+				console.log(txIn.txOutIndex);
+				
 				return false;
 			}
 		}

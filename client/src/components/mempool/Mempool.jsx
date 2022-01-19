@@ -3,24 +3,25 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import useAxios from '../../hooks/useAxios';
 
-const Mempool = ({ txData }) => {
+const Mempool = () => {
+
   const paramsMining = {
     method: 'post',
     baseURL: 'http://localhost:3001',
     url: '/mineBlock',
-    data: { data: [{ tx: 'test' }] },
+    data : { address: "04875a5ee53110a1ce856f2fc549671456afcc62a510d96cb8e05ca0cb65f78c0b1fb880db8ac195cee93d2d6eff917e795f224d63a2c73319b1ce1e42f27395a4"},
   };
   const paramsMining2 = {
     method: 'post',
     baseURL: 'http://localhost:3002',
     url: '/mineBlock',
-    data: { data: [{ tx: 'asdf' }] },
+    data : { address: "04875a5ee53110a1ce856f2fc549671456afcc62a510d96cb8e05ca0cb65f78c0b1fb880db8ac195cee93d2d6eff917e795f224d63a2c73319b1ce1e42f27395a4"},
   };
   const paramsMining3 = {
     method: 'post',
     baseURL: 'http://localhost:3003',
     url: '/mineBlock',
-    data: { data: [{ tx: 'third' }] },
+    data : { address: "04875a5ee53110a1ce856f2fc549671456afcc62a510d96cb8e05ca0cb65f78c0b1fb880db8ac195cee93d2d6eff917e795f224d63a2c73319b1ce1e42f27395a4"},
   };
   const mining = async (params) => {
     const result = await axios(params);

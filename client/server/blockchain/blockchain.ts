@@ -157,15 +157,12 @@ export default class Blockchain {
 		return true;
 	}
 	
-	static getBlockData = (receiverAddress: string, amount: number, blockchain:Blockchain, unspentTxOuts: UnspentTxOut[], transactionPool: Transaction[]) => {
+	static getBlockData = (receiverAddress: string, blockchain: Blockchain, transactionPool: Transaction[]) => {
 		if (!TxFunctions.isValidAddress(receiverAddress)){
 			throw Error("Invalid address");
 		}
-		if (typeof amount !== 'number') {
-			throw Error("Invalid amount")
-		}
 		const coinbaseTx: Transaction = TxFunctions.getCoinbaseTransaction(getPublicFromWallet(), blockchain.getLastBlock().header.index + 1);
-		const transactions: Transaction[] = TransactionPool.getTransactionPool(transactionPool);
+		const transactions: Transaction[] = transactionPool;
 		const blockData: Transaction[] = [coinbaseTx].concat(transactions);
 		return blockData;
 	}
@@ -174,7 +171,9 @@ export default class Blockchain {
   static getUnspentTxOuts = (unspentTxOuts: UnspentTxOut[]) => _.cloneDeep(unspentTxOuts)
   static setUnspentTxOuts = (unspentTxOuts: UnspentTxOut[] | null, newUnspentTxOuts: UnspentTxOut[] | null) => {
 		if(unspentTxOuts !== null && newUnspentTxOuts !== null){
-			console.log("Replacing unspentTxOuts with " + newUnspentTxOuts);
+			console.log("Replacing unspentTxOuts with ");
+			console.log(newUnspentTxOuts);
+			
 			unspentTxOuts = newUnspentTxOuts;    
 		} else {
 			throw Error("Invalid unspentTxOuts or newUnspentTxOuts.");
@@ -188,7 +187,6 @@ export default class Blockchain {
 	static sendTransaction = (address: string, amount: number, unspentTxOuts: UnspentTxOut[], transactionPool: Transaction[]): Transaction => {
 		const tx: Transaction = createTransaction(address, amount, getPrivateFromWallet(), unspentTxOuts, transactionPool);
 		TransactionPool.addToTransactionPool(tx, unspentTxOuts, transactionPool);
-		// broadcasttransctionPool()
 		return tx;
 	}
   

@@ -137,8 +137,6 @@ const createTransaction = (
 	txPool: Transaction[]
 ): Transaction => {
 	console.log("txPool: %s", JSON.stringify(txPool));
-	console.log('asdf');
-	console.log(TxFunctions.getPublicKey(privateKey));
 	
 	const myAddress: string = TxFunctions.getPublicKey(privateKey);
 	

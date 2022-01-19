@@ -410,7 +410,10 @@ class TxFunctions {
 				);
 			})
 			.reduce((a, b) => a.concat(b), []);
-
+			console.log("newUnspentTxOuts: ");
+			console.log(newUnspentTxOuts);
+			
+			
 		// 블록에서 소비된 Transaction output들
 		const consumedTxOuts: UnspentTxOut[] = newTransactions
 			.map((tx) => tx.txIns)

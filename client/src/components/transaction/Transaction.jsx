@@ -12,7 +12,7 @@ const Transaction = () => {
 		method: "post",
 		baseURL: "http://localhost:3001",
 		url: "/sendtransaction",
-        data : { address: address, amount: amount,}
+    data : { address: address, amount: amount,}
 	};
 
 	const addTx = async () => {
