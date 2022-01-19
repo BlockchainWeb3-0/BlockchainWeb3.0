@@ -17,7 +17,6 @@ const Peer1 = () => {
         //console.log("Connected peers : ", result.data);
         setStatePeers(result.data);
     };
-    console.log(statePeers);
 
     const addPeers = () => {
         const peerList = peerPort.split(" ");
@@ -37,6 +36,41 @@ const Peer1 = () => {
         setPeerPort(e.target.value);
     };
 
+    const [address, setAddress] = useState("");
+    const [privateKey, setPrivateKey] = useState("");
+    const [amount, setAmount] = useState(1);
+
+    const textOnAddress = (e) => {
+        setAddress(e.target.value);
+    };
+    const textOnAmount = (e) => {
+        setAmount(parseInt(e.target.value));
+    };
+    const textOnPrivatekey = (e) => {
+        setPrivateKey(e.target.value);
+    };
+
+    const addWallet = async () => {
+        const params = {
+            method: "get",
+            baseURL: "http://localhost:3001",
+            url: "/addwallet",
+        };
+        const result = await axios.request(params);
+        setAddress(result.data.data.publickey);
+        setPrivateKey(result.data.data.privatekey);
+    };
+
+    const params = {
+        method: "post",
+        baseURL: "http://localhost:3001",
+        url: "/sendtransaction",
+        data: { address, amount, privateKey },
+    };
+    const addTx = async () => {
+        const result = await axios.request(params);
+    };
+
     return (
         <div className="peer_container">
             <div className="peer_name">Peer1</div>
@@ -45,6 +79,7 @@ const Peer1 = () => {
                 <Button onClick={getPeers}>Get Peers</Button>
                 {statePeers.join(" , ")}
             </div>
+
             <div className="peer_textField">
                 <TextField
                     required
@@ -56,6 +91,45 @@ const Peer1 = () => {
                 />
                 <Button onClick={addPeers}>Add Peers</Button>
             </div>
+
+            {/* <div className="peer_addWallet">
+                <Button onClick={addWallet}>Add Wallet</Button>
+                <div className="transaction_textField">
+                    <TextField
+                        required
+                        label="TxOut"
+                        value={address}
+                        variant="standard"
+                        name="address"
+                        onChange={textOnAddress}
+                        sx={{ width: "100%", displayPrint: "block" }}
+                    />
+                    <TextField
+                        required
+                        label="PrivateKey"
+                        value={privateKey}
+                        variant="standard"
+                        name="address"
+                        onChange={textOnPrivatekey}
+                        sx={{ width: "100%", displayPrint: "block" }}
+                    />
+                    <TextField
+                        required
+                        label="Input Amount"
+                        variant="standard"
+                        name="amount"
+                        onChange={textOnAmount}
+                        sx={{
+                            width: 200,
+                            displayPrint: "block",
+                            marginTop: "20px",
+                        }}
+                    />
+                    <Button onClick={addTx} className="transaction_submit_btn">
+                        Add Transaction
+                    </Button>
+                </div>
+            </div> */}
         </div>
     );
 };

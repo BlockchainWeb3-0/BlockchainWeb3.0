@@ -6,6 +6,8 @@ import { Button, Form } from "react-bootstrap";
 const Peer1 = () => {
     const [peerPort, setPeerPort] = useState("6001");
     const [statePeers, setStatePeers] = useState([]);
+    const [publicKey, setPublicKey] = useState("");
+    const [privateKey, setPrivateKey] = useState("");
 
     const getPeers = async () => {
         const params = {
@@ -17,7 +19,18 @@ const Peer1 = () => {
         //console.log("Connected peers : ", result.data);
         setStatePeers(result.data);
     };
-    console.log(statePeers);
+
+    const addWallet = async () => {
+        const params = {
+            method: "get",
+            baseURL: "http://localhost:3001",
+            url: "/addwallet",
+        };
+        const result = await axios.request(params);
+        console.log(result);
+        setPublicKey(result.data.data.publickey);
+        setPrivateKey(result.data.data.privatekey);
+    };
 
     const addPeers = () => {
         const peerList = peerPort.split(" ");
@@ -44,6 +57,11 @@ const Peer1 = () => {
             <div className="peer_getPeers">
                 <Button onClick={getPeers}>Get Peers</Button>
                 {statePeers.join(" , ")}
+            </div>
+            <div className="peer_addWallet">
+                {/* <Button onClick={addWallet}>Add Wallet</Button>
+                <div className="peer_publicKey">{publicKey}</div>
+                <div className="peer_privateKey">{privateKey}</div> */}
             </div>
             <div className="peer_textField">
                 <TextField

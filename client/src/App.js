@@ -11,6 +11,7 @@ import Peer from "./components/peer/Peer";
 import Peer1 from "./components/peer/Peer1";
 import Peer2 from "./components/peer/Peer2";
 import Yourkey from "./components/yourkey/Yourkey";
+import P2PTransaction from "./components/p2pTransaction/P2PTransaction";
 
 function App() {
     return (
@@ -31,6 +32,10 @@ function App() {
                         <Route path="signin" element={<Signin />} />
                         <Route path="signup" element={<Signup />} />
                         <Route path="yourkey/:key" element={<Yourkey />} />
+                        <Route
+                            path="p2ptransaction"
+                            element={<P2PTransaction />}
+                        />
                     </Route>
                 </Routes>
             </div>

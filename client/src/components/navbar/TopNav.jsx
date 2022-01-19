@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Nav, Navbar, Container, Button } from "react-bootstrap";
-import { useCookies } from "react-cookie";
 import { Link } from "react-router-dom";
 import OffcanvasComp from "../offcanvas/OffcanvasComp";
 import Wallet from "../wallet/Wallet";
+import axios from "axios";
+import { useCookies } from "react-cookie";
 
 import jwtDecode from "jwt-decode";
 import _ from "lodash";
@@ -12,11 +13,7 @@ function TopNav() {
     const [show, setShow] = useState(false);
     const [signined, setSignined] = useState(false);
     const [tokenUser, setTokenUser, removeCookie] = useCookies(["x_auth"]);
-
-    // console.log("토큰 유저", tokenUser);
-    // if (tokenUser === null) {
-    //     return <div>asdfasdf</div>;
-    // }
+    const [balance, setBalance] = useState(0);
 
     const handleClose = () => setShow(false);
     const handleShow = (e) => setShow(true);
@@ -40,6 +37,11 @@ function TopNav() {
                                 <Nav>
                                     <Link to="/transaction">Transaction</Link>
                                 </Nav>
+                                <Nav>
+                                    <Link to="/p2ptransaction">
+                                        testing....
+                                    </Link>
+                                </Nav>
                             </Nav>
                             <Nav>
                                 <>
@@ -58,6 +60,18 @@ function TopNav() {
         );
     } else if (!_.isEmpty(tokenUser)) {
         const user = jwtDecode(tokenUser.x_auth);
+        const params = {
+            method: "get",
+            baseURL: "http://localhost:3001",
+            url: `balance/${user.address}`,
+        };
+
+        const getBalance = async () => {
+            const result = await axios.request(params);
+            setBalance(result.data.balance);
+        };
+        getBalance();
+
         return (
             <>
                 <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -79,6 +93,11 @@ function TopNav() {
                                 <Nav>
                                     <Link to="/peer">Peer</Link>
                                 </Nav>
+                                <Nav>
+                                    <Link to="/p2ptransaction">
+                                        testing....
+                                    </Link>
+                                </Nav>
                             </Nav>
                             <Nav>
                                 <Nav.Link onClick={handleShow}>MyPage</Nav.Link>
@@ -99,7 +118,7 @@ function TopNav() {
                     scroll={true}
                     backdrop={true}
                 >
-                    <Wallet address={user.address} />
+                    <Wallet address={user.address} balance={balance} />
                 </OffcanvasComp>
             </>
         );
