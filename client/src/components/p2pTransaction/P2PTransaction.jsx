@@ -2,8 +2,9 @@ import "./P2PTransaction.scss";
 import { TextField } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Spinner } from "react-bootstrap";
 import { ec } from "elliptic";
+import MyUTXO from "../wallet/MyUTXO";
 
 const EC = new ec("secp256k1");
 
@@ -59,7 +60,7 @@ const P2PTransaction = ({ peer }) => {
 		try {
 			const { data } = await axios({
 				method: "get",
-				baseURL: `http://localhost:3001`,
+				baseURL: `http://localhost:${port}`,
 				url: `/myutxos/${publickey}`,
 			});
 			setPeerUTXOs(data);
@@ -72,7 +73,7 @@ const P2PTransaction = ({ peer }) => {
     const getBalance = async () => {
         const result = await axios.request({
             method: "get",
-            baseURL: "http://localhost:3001",
+            baseURL: `http://localhost:${port}`,
             url: `balance/${publickey}`,
         });
         setBalance(result.data.balance);
@@ -80,19 +81,20 @@ const P2PTransaction = ({ peer }) => {
 
     useEffect(()=> {
         getBalance();
-    }, [balance])
+        getPeerUTXOs(publickey);
+    }, [])
 
 	return (
 		<div className="transaction_container">
 			<div className="transaction_title">Port {port}</div>
 			<div className="transaction_textField">
-                <TextField
+				<TextField
 					required
 					label="Balance"
 					variant="standard"
 					name="address"
 					sx={{ width: "10%", displayPrint: "block" }}
-                    value={balance}
+					value={balance}
 				/>
 				<TextField
 					required
@@ -100,8 +102,8 @@ const P2PTransaction = ({ peer }) => {
 					variant="standard"
 					name="address"
 					onChange={textOnPublickey}
-					sx={{ width: "100%", displayPrint: "block", marginTop: "20px", }}
-                    value={publickey}
+					sx={{ width: "100%", displayPrint: "block", marginTop: "20px" }}
+					value={publickey}
 				/>
 				<TextField
 					required
@@ -114,7 +116,7 @@ const P2PTransaction = ({ peer }) => {
 						displayPrint: "block",
 						marginTop: "20px",
 					}}
-                    value={privatekey}
+					value={privatekey}
 				/>
 				<TextField
 					required
@@ -143,9 +145,20 @@ const P2PTransaction = ({ peer }) => {
 				<Button onClick={addTx} className="transaction_submit_btn">
 					Add Transaction
 				</Button>
-				<Button onClick={renewWalletKeys} variant="danger" className="transaction_renew_btn">
+				<Button
+					onClick={renewWalletKeys}
+					variant="danger"
+					className="transaction_renew_btn"
+				>
 					New Wallet address
 				</Button>
+				{loading ? (
+					<Spinner animation="border" variant="dark" />
+				) : (
+					peerUTXOs.map((utxo, index) => (
+						<MyUTXO key={index} utxo={utxo} index={index} />
+					))
+				)}
 			</div>
 		</div>
 	);

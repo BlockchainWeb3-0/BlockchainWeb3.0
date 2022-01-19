@@ -36,8 +36,14 @@ const Wallet = ({ address, balance }) => {
 			{walletAddress}
 			<h2>Balance</h2>
 			{walletBalance}
-            <h2>MyUTXOs</h2>
-            {loading? <Spinner animation="border" variant="dark" /> : myUTXOs.map((utxo, index) => <MyUTXO key={index} utxo={utxo} index={index} />)}
+			<h2>MyUTXOs</h2>
+			{loading ? (
+				<Spinner animation="border" variant="dark" />
+			) : (
+				myUTXOs.map((utxo, index) => (
+					<MyUTXO key={index} utxo={utxo} index={index} />
+				))
+			)}
 		</>
 	);
 };
