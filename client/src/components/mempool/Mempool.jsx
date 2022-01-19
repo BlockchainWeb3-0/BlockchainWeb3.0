@@ -1,22 +1,21 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import useAxios from "../../hooks/useAxios";
 import "./mempool.scss";
 import MempoolPeer from "./MempoolPeer";
 
-import { useCookies } from "react-cookie";
-
-import jwtDecode from "jwt-decode";
 import _ from "lodash";
 
 const Mempool = () => {
+    const address1 = "042b69d0cfaadaa495939ba003a0e2ecc5789f45bf7acbcbacae6b12f715bf6723aee9e5394073da0d4aab396d45a95a8e2743555fd481628d5b2aab9260b7ca58"
+    const address2 = "044c7119c90a9fd2d314cec6a6c709e69d2e05315a4a4319c00ad6446e4ba2358ecb4b80660912005555a9a8d20d4c6886003f093cb5fe7140f87ad04e1b1533b6"
+    const address3 = "046e4f997621d59bd91768fababa987d13cafb73cb41a6c51fc736db383193b2f27f0d07c7f6a981f412505d79099f74dfffe830e0e212b275847e743b3e56262a"
+    
     const [data, setData] = useState(undefined);
     const [loading, setLoading] = useState(true);
     const [data2, setData2] = useState(undefined);
     const [loading2, setLoading2] = useState(true);
     const [data3, setData3] = useState(undefined);
     const [loading3, setLoading3] = useState(true);
-    const [tokenUser, setTokenUser, removeCookie] = useCookies(["x_auth"]);
     const [miningMode, setMiningMode] = useState(false);
 
     const txPool = async () => {
@@ -53,17 +52,6 @@ const Mempool = () => {
         txPool3();
     }, []);
 
-    if (_.isEmpty(tokenUser)) {
-        return (
-            <>
-                <div>
-                    <h1>로그인해라</h1>
-                </div>
-            </>
-        );
-    }
-    const userData = jwtDecode(tokenUser.x_auth);
-    const address = userData.address;
     const getMiningParams = (port, addr) => {
         return {
             method: "post",
@@ -101,19 +89,19 @@ const Mempool = () => {
                 <MempoolPeer
                     data={data}
                     port={3001}
-                    handleOnClick={() => miningClick(3001, address)}
+                    handleOnClick={() => miningClick(3001, address1)}
                     loading={loading}
                 />
                 <MempoolPeer
                     data={data2}
                     port={3002}
-                    handleOnClick={() => miningClick(3002, address)}
+                    handleOnClick={() => miningClick(3002, address2)}
                     loading={loading2}
                 />
                 <MempoolPeer
                     data={data3}
                     port={3003}
-                    handleOnClick={() => miningClick(3003, address)}
+                    handleOnClick={() => miningClick(3003, address3)}
                     loading={loading3}
                 />
             </div>

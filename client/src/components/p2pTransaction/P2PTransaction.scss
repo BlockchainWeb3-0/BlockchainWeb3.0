@@ -3,7 +3,6 @@
     margin-bottom: 10px;
     padding-left: 20px;
     padding-right: 20px;
-    background-color: #443741;
     border: none;
 }
 .transaction_textField > button:hover {
@@ -26,6 +25,12 @@
 }
 
 .transaction_submit_btn {
+    margin-top: 30px;
+    margin-left: 20px;
+    min-width: 113px;
+    background-color: #443741;
+}
+.transaction_renew_btn {
     margin-top: 30px;
     margin-left: 20px;
     min-width: 113px;

@@ -29,6 +29,14 @@ const generatePrivateKey = (): string => {
     return privateKey.toString(16);
 };
 
+const generatePeerWallet = (): string[] => {
+    const privateKey = generatePrivateKey();
+    const key = EC.keyFromPrivate(privateKey, "hex");
+    const publicKey = key.getPublic().encode("hex", false);
+
+    return [privateKey, publicKey]
+}
+
 const initWallet = () => {
     if (existsSync(privateKeyLocation)) {
         return;
