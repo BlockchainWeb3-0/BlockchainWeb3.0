@@ -20,7 +20,9 @@ const Mempool = () => {
     const [data3, setData3] = useState(undefined);
     const [loading3, setLoading3] = useState(true);
     const [miningMode, setMiningMode] = useState(false);
-    const [intervalId, setIntervalId] = useState(0);
+    const [intervalId1, setIntervalId1] = useState(0);
+    const [intervalId2, setIntervalId2] = useState(0);
+    const [intervalId3, setIntervalId3] = useState(0);
 
     const txPool = async () => {
         const txPoolData = await axios(getTxPoolParams(3001));
@@ -65,19 +67,44 @@ const Mempool = () => {
     const mining = async (params) => {
         await axios(params);
     };
-    const start = (port, address, e) => {
-        if (intervalId) {
-            clearInterval(intervalId);
-            setIntervalId(0);
+    const start1 = (port, address, e) => {
+        if (intervalId1) {
+            clearInterval(intervalId1);
+            setIntervalId1(0);
             return;
         }
         const newIntervalId = setInterval(() => {
             mining(getMiningParams(port, address));
         }, 1500);
-        setIntervalId(newIntervalId);
+        setIntervalId1(newIntervalId);
+        e.preventDefault();
+    };
+    const start2 = (port, address, e) => {
+        if (intervalId2) {
+            clearInterval(intervalId2);
+            setIntervalId2(0);
+            return;
+        }
+        const newIntervalId = setInterval(() => {
+            mining(getMiningParams(port, address));
+        }, 1500);
+        setIntervalId2(newIntervalId);
+        e.preventDefault();
+    };
+    const start3 = (port, address, e) => {
+        if (intervalId3) {
+            clearInterval(intervalId3);
+            setIntervalId3(0);
+            return;
+        }
+        const newIntervalId = setInterval(() => {
+            mining(getMiningParams(port, address));
+        }, 1500);
+        setIntervalId3(newIntervalId);
         e.preventDefault();
     };
     //clearInterval(intervalId);
+    //console.log(intervalId);
 
     const miningClick = (port, address) => {
         mining(getMiningParams(port, address));
@@ -96,8 +123,9 @@ const Mempool = () => {
                     port={3001}
                     handleOnClick={() => miningClick(3001, address1)}
                     loading={loading}
-                    start={start}
+                    start={start1}
                     address={address1}
+                    intervalId={intervalId1}
                 />
 
                 <MempoolPeer
@@ -105,16 +133,18 @@ const Mempool = () => {
                     port={3002}
                     handleOnClick={() => miningClick(3002, address2)}
                     loading={loading2}
-                    start={start}
+                    start={start2}
                     address={address2}
+                    intervalId={intervalId2}
                 />
                 <MempoolPeer
                     data={data3}
                     port={3003}
                     handleOnClick={() => miningClick(3003, address3)}
                     loading={loading3}
-                    start={start}
+                    start={start3}
                     address={address3}
+                    intervalId={intervalId3}
                 />
             </div>
         </div>
