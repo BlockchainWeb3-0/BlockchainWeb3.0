@@ -2,12 +2,12 @@ import React from "react";
 import { Button, Spinner } from "react-bootstrap";
 import Transaction from "./Transaction";
 
-const MempoolPeer = ({data, handleOnClick, loading}) => {
+const MempoolPeer = ({data, handleOnClick, loading, port}) => {
 	return (
 		<div className="mempool-peer">
 			<div style={{ marginBottom: 20 }}>
 				<Button variant="warning" onClick={handleOnClick}>
-					Mining3001
+					Mining {port}
 				</Button>
 			</div>
 			<div>
