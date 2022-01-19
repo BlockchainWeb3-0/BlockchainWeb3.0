@@ -17,8 +17,8 @@ const Mempool = () => {
     const [data3, setData3] = useState(undefined);
     const [loading3, setLoading3] = useState(true);
     const [tokenUser, setTokenUser, removeCookie] = useCookies(["x_auth"]);
+    const [miningMode, setMiningMode] = useState(false);
 
-        
     const txPool = async () => {
         const txPoolData = await axios(getTxPoolParams(3001));
         setData(txPoolData.data)
@@ -34,6 +34,18 @@ const Mempool = () => {
         setData3(txPoolData.data)
         setLoading3(false);
     }
+
+    const toggleMiningMode = () => {
+        setMiningMode(!miningMode)
+    }
+
+    const autoMining = () => {
+        
+    }
+
+    useEffect(()=>{
+        autoMining();
+    }, [miningMode])
 
     useEffect(() => {
         txPool();
@@ -101,7 +113,7 @@ const Mempool = () => {
                 <MempoolPeer
                     data={data3}
                     port={3003}
-                    handleOnClick={() => miningClick(3002, address)}
+                    handleOnClick={() => miningClick(3003, address)}
                     loading={loading3}
                 />
             </div>
