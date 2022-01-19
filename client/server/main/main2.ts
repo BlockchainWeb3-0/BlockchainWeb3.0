@@ -88,20 +88,50 @@ const initHttpServer = (port: number) => {
 	});
 
 	app.post("/mineBlock", (req: Request, res: Response) => {
-		const data: any = req.body.data;
-		console.log("mineBlock", data);
+		const address: string = req.body.address;
+		const data: Transaction[] = Blockchain.getBlockData(address, blockchain, transactionPool);
+		console.log("mineBlock : ", data);
 		const newBlock = blockchain.addBlock(data);
 		broadcastLatest();
 
 		if (unspentTxOuts !== null) {
-			const retVal: UnspentTxOut[] | null = TxFunctions.processTransactions(
+			const newUnspentTxOuts: UnspentTxOut[] | null = TxFunctions.processTransactions(
 				newBlock.data,
-				Blockchain.getUnspentTxOuts(unspentTxOuts),
+				unspentTxOuts,
 				newBlock.header.index
 			);
-			Blockchain.setUnspentTxOuts(unspentTxOuts, retVal);
-			TransactionPool.updateTransactionPool(unspentTxOuts, transactionPool);
-			res.send("ok");
+			
+			if(newUnspentTxOuts !== null){
+				// 새로운 UTXOs로 바꿈
+				unspentTxOuts = newUnspentTxOuts;
+
+				// Transaction Pool도 갱신해야함
+				if( unspentTxOuts == null) {
+					throw Error("Invalid unspentTxOuts")
+				}
+				const invalidTxs = [];
+				for (const tx of transactionPool) {
+					for (const txIn of tx.txIns) {
+						if (!TransactionPool.hasTxIn(txIn, unspentTxOuts)) {
+							invalidTxs.push(tx);
+							break;
+						}
+					}
+				}
+				// 찾은 트랜잭션들 제거
+				if (invalidTxs.length > 0) {
+					console.log(
+						"Removing the following transactions from transaction pool: ",
+						JSON.stringify(invalidTxs)
+					);
+					transactionPool = _.without(transactionPool, ...invalidTxs);
+				}
+				TransactionPool.updateTransactionPool(unspentTxOuts, transactionPool);
+				res.send("ok");
+			} else {
+				throw Error("Invalid newUnspentTxOuts.");
+			}
+			
 		} else {
 			res.status(404).send("Invalid unspentTxOuts");
       throw Error("Invalid unspentTxOuts");
@@ -120,11 +150,12 @@ const initHttpServer = (port: number) => {
         res.status(404).send("Invalid unspentTxOuts");
         throw Error("Invalid unspentTxOuts");
       } else {
-        const resp = Blockchain.sendTransaction(address, amount, unspentTxOuts, transactionPool)
-        res.send(resp);
+        const newTransaciton = Blockchain.sendTransaction(address, amount, unspentTxOuts, transactionPool)
+        res.send(newTransaciton);
+				
       }
 		} catch (error) {
-			res.status(400).send(error);
+			res.status(400).send("Sending transaction faild");
 		}
 	});
 
