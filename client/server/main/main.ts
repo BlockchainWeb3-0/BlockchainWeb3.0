@@ -102,7 +102,7 @@ const initHttpServer = (port: number) => {
 				newBlock.header.index
 			);
 			Blockchain.setUnspentTxOuts(unspentTxOuts, retVal);
-			TransactionPool.updateTransactionPool(unspentTxOuts);
+			TransactionPool.updateTransactionPool(unspentTxOuts, transactionPool);
 			res.send("ok");
 		} else {
 			res.status(404).send("Invalid unspentTxOuts");
@@ -122,7 +122,7 @@ const initHttpServer = (port: number) => {
         res.status(404).send("Invalid unspentTxOuts");
         throw Error("Invalid unspentTxOuts");
       } else {
-        const resp = Blockchain.sendTransaction(address, amount, unspentTxOuts)
+        const resp = Blockchain.sendTransaction(address, amount, unspentTxOuts, transactionPool)
         res.send(resp);
       }
 		} catch (error) {
@@ -169,4 +169,4 @@ const server = app.listen(http_port, () => {
 initP2PServer(p2p_port);
 
 initWallet();
-export { app, server, blockchain, unspentTxOuts };
+export { app, server, blockchain, unspentTxOuts, transactionPool };

@@ -137,12 +137,11 @@ const createTransaction = (
 	txPool: Transaction[]
 ): Transaction => {
 	console.log("txPool: %s", JSON.stringify(txPool));
-  console.log(receiverAddress);
-  console.log(amount);
-  console.log(privateKey);
-  console.log(unspentTxOuts);
-  
+	console.log('asdf');
+	console.log(TxFunctions.getPublicKey(privateKey));
+	
 	const myAddress: string = TxFunctions.getPublicKey(privateKey);
+	
 	const myUnspentTxOutsA = unspentTxOuts.filter(
 		(uTxO: UnspentTxOut) => uTxO.address === myAddress
 	);

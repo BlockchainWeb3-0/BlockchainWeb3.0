@@ -2,7 +2,7 @@ import WebSocket = require("ws");
 import { Server } from "ws";
 import Block from "../blockchain/block";
 import Blockchain from "../blockchain/blockchain";
-import { blockchain, unspentTxOuts } from "../main/main";
+import { blockchain, unspentTxOuts, transactionPool } from "../main/main";
 import { Transaction } from "../transaction/transaction";
 import { TransactionPool } from "../transactionPool/transactionPool";
 
@@ -99,7 +99,7 @@ const initMessageHandler = (ws: WebSocket) => {
                     }
                     receivedTransactions.forEach((transaction: Transaction) => {
                         try {
-                            Blockchain.handleReceivedTransaction(transaction, unspentTxOuts);
+                            Blockchain.handleReceivedTransaction(transaction, unspentTxOuts, transactionPool);
                             broadcastTransctionPool();
                         } catch (error) {
                             console.log(error);
@@ -145,7 +145,7 @@ const queryTransactionPoolMsg = (): Message => ({
 });
 const responseTransactionPoolMsg = (): Message => ({
 	type: MessageType.RESPONSE_TRANSACTION_POOL,
-	data: JSON.stringify(TransactionPool.getTransactionPool()),
+	data: JSON.stringify(TransactionPool.getTransactionPool(transactionPool)),
 });
 
 
@@ -192,7 +192,7 @@ const handleBlockchainResponse = (receivedBlocks: Block[]) => {
             );
             blockchain.replaceChain(receivedBlocks);
             Blockchain.setUnspentTxOuts(unspentTxOuts, Blockchain.newBlockUnspentTxOuts(receivedBlocks));
-            TransactionPool.updateTransactionPool(unspentTxOuts)
+            TransactionPool.updateTransactionPool(unspentTxOuts, transactionPool)
             broadcast(responseLatestMsg());
         }
     } else {

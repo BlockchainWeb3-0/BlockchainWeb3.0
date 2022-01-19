@@ -157,7 +157,7 @@ export default class Blockchain {
 		return true;
 	}
 	
-	static getBlockData = (receiverAddress: string, amount: number, blockchain:Blockchain, unspentTxOuts: UnspentTxOut[]) => {
+	static getBlockData = (receiverAddress: string, amount: number, blockchain:Blockchain, unspentTxOuts: UnspentTxOut[], transactionPool: Transaction[]) => {
 		if (!TxFunctions.isValidAddress(receiverAddress)){
 			throw Error("Invalid address");
 		}
@@ -165,7 +165,7 @@ export default class Blockchain {
 			throw Error("Invalid amount")
 		}
 		const coinbaseTx: Transaction = TxFunctions.getCoinbaseTransaction(getPublicFromWallet(), blockchain.getLastBlock().header.index + 1);
-		const transactions: Transaction[] = TransactionPool.getTransactionPool();
+		const transactions: Transaction[] = TransactionPool.getTransactionPool(transactionPool);
 		const blockData: Transaction[] = [coinbaseTx].concat(transactions);
 		return blockData;
 	}
@@ -185,15 +185,15 @@ export default class Blockchain {
 		return findUnspentTxOuts(getPublicFromWallet(), unspentTxOuts)
 	}
 
-	static sendTransaction = (address: string, amount: number, unspentTxOuts: UnspentTxOut[]): Transaction => {
-		const tx: Transaction = createTransaction(address, amount, getPrivateFromWallet(), unspentTxOuts, TransactionPool.getTransactionPool());
-		TransactionPool.addToTransactionPool(tx, unspentTxOuts);
+	static sendTransaction = (address: string, amount: number, unspentTxOuts: UnspentTxOut[], transactionPool: Transaction[]): Transaction => {
+		const tx: Transaction = createTransaction(address, amount, getPrivateFromWallet(), unspentTxOuts, transactionPool);
+		TransactionPool.addToTransactionPool(tx, unspentTxOuts, transactionPool);
 		// broadcasttransctionPool()
 		return tx;
 	}
   
-	static handleReceivedTransaction = (transaction: Transaction, unspentTxOuts: UnspentTxOut[] | null) => {
+	static handleReceivedTransaction = (transaction: Transaction, unspentTxOuts: UnspentTxOut[] | null, transactionPool: Transaction[]) => {
 		if (unspentTxOuts === null) throw Error("Invalid unspentTxOuts")
-		TransactionPool.addToTransactionPool(transaction, Blockchain.getUnspentTxOuts(unspentTxOuts));
+		TransactionPool.addToTransactionPool(transaction, Blockchain.getUnspentTxOuts(unspentTxOuts), transactionPool);
 	}
 }

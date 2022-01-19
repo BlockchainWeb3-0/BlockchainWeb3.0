@@ -12,10 +12,8 @@ import {
 	TxFunctions,
 } from "../transaction/transaction";
 
-let transactionPool: Transaction[] = [];
-
 class TransactionPool {
-	static getTransactionPool = () => {
+	static getTransactionPool = (transactionPool: Transaction[]) => {
 		return _.cloneDeep(transactionPool);
 	};
 
@@ -27,7 +25,8 @@ class TransactionPool {
 	 */
 	static addToTransactionPool = (
 		tx: Transaction,
-		unspentTxOuts: UnspentTxOut[]
+		unspentTxOuts: UnspentTxOut[],
+		transactionPool: Transaction[]
 	) => {
 		if (!TxFunctions.validateTransaction(tx, unspentTxOuts)) {
 			throw Error("You are trying to add invalid tx to transaction pool");
@@ -61,7 +60,7 @@ class TransactionPool {
 	 * - 새로운 블록에 추가된 trasaction들을 transaction Pool에서 제거
 	 * @param unspentTxOuts
 	 */
-	static updateTransactionPool = (unspentTxOuts: UnspentTxOut[] | null) => {
+	static updateTransactionPool = (unspentTxOuts: UnspentTxOut[] | null, transactionPool: Transaction[]) => {
 		// Transaction Pool에 있는 트랜잭션 중에
 		// UTXO에 있다면 이미 새로운 블록에 포함된 것으로 취급
 		if( unspentTxOuts == null) {

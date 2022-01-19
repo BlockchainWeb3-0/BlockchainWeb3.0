@@ -480,7 +480,7 @@ class TxFunctions {
 	 */
 	static getPublicKey = (aPrivatekey: string): string => {
 		return ec
-			.keyFromPrivate(aPrivatekey, "key")
+			.keyFromPrivate(aPrivatekey, "hex")
 			.getPublic()
 			.encode("hex", false);
 	};
