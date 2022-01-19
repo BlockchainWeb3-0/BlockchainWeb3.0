@@ -10,10 +10,48 @@ import jwtDecode from "jwt-decode";
 import _ from "lodash";
 
 const Mempool = () => {
+    const [data, setData] = useState(undefined);
+    const [loading, setLoading] = useState(true);
+    const [data2, setData2] = useState(undefined);
+    const [loading2, setLoading2] = useState(true);
+    const [data3, setData3] = useState(undefined);
+    const [loading3, setLoading3] = useState(true);
     const [tokenUser, setTokenUser, removeCookie] = useCookies(["x_auth"]);
-    const [user, setUser] = useState("");
-    const address =
-        "04875a5ee53110a1ce856f2fc549671456afcc62a510d96cb8e05ca0cb65f78c0b1fb880db8ac195cee93d2d6eff917e795f224d63a2c73319b1ce1e42f27395a4";
+
+        
+    const txPool = async () => {
+        const txPoolData = await axios(getTxPoolParams(3001));
+        setData(txPoolData.data)
+        setLoading(false);
+    }
+    const txPool2 = async () => {
+        const txPoolData = await axios(getTxPoolParams(3002));
+        setData2(txPoolData.data)
+        setLoading2(false);
+    }
+    const txPool3 = async () => {
+        const txPoolData = await axios(getTxPoolParams(3003));
+        setData3(txPoolData.data)
+        setLoading3(false);
+    }
+
+    useEffect(() => {
+        txPool();
+        txPool2();
+        txPool3();
+    }, [])
+    
+    if (_.isEmpty(tokenUser)) {
+        return (
+            <>
+                <div>
+                    <h1>로그인해라</h1>
+                </div>
+            </>
+        );
+    }
+    const userData = jwtDecode(tokenUser.x_auth);
+    const address = userData.address
     const getMiningParams = (port, addr) => {
         return {
             method: "post",
@@ -33,18 +71,8 @@ const Mempool = () => {
     };
 
     const mining = async (params) => {
-        const result = await axios(params);
+        await axios(params);
     };
-
-    const getTxPool = async (port) => {
-        const params = getTxPoolParams(port);
-        const txPoolData = await axios(params);
-        return txPoolData.data;
-    };
-
-	const txPool = useAxios(getTxPoolParams(3001));
-	const txPool2 = useAxios(getTxPoolParams(3002));
-	const txPool3 = useAxios(getTxPoolParams(3003));
 
     const miningClick = (port, address) => {
         mining(getMiningParams(port, address));
@@ -59,22 +87,22 @@ const Mempool = () => {
             </div>
             <div className="mempool-peer-container">
                 <MempoolPeer
-                    data={txPool.data}
+                    data={data}
                     port={3001}
                     handleOnClick={() => miningClick(3001, address)}
-                    loading={txPool.loading}
+                    loading={loading}
                 />
                 <MempoolPeer
-                    data={txPool2.data}
+                    data={data2}
                     port={3002}
                     handleOnClick={() => miningClick(3002, address)}
-                    loading={txPool2.loading}
+                    loading={loading2}
                 />
                 <MempoolPeer
-                    data={txPool3.data}
+                    data={data3}
                     port={3003}
                     handleOnClick={() => miningClick(3002, address)}
-                    loading={txPool3.loading}
+                    loading={loading3}
                 />
             </div>
         </div>
