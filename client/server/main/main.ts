@@ -223,18 +223,22 @@ const initHttpServer = (port: number) => {
 
             const { TxInAddress, TxOutAddress, amount, sign }: TxData =
                 req.body;
+            console.log(TxOutAddress);
+            console.log(amount);
             if (
                 TxInAddress === undefined ||
                 TxOutAddress == undefined ||
                 amount == undefined ||
                 sign === undefined
             ) {
-                res.status(404).send(
-                    "Invalid TxInAddress or TxOutAddress or amount or sign"
-                );
-                throw Error(
-                    "Invalid TxInAddress or TxOutAddress or amount or sign"
-                );
+                res.status(404).send({
+                    error: "Invalid TxInAddress or TxOutAddress or amount or sign",
+                    message:
+                        "Invalid TxInAddress or TxOutAddress or amount or sign",
+                });
+                // throw Error(
+                //     "Invalid TxInAddress or TxOutAddress or amount or sign"
+                // );
             }
             if (unspentTxOuts === null) {
                 res.status(404).send("Invalid unspentTxOuts");
@@ -249,9 +253,9 @@ const initHttpServer = (port: number) => {
                     TxInAddress
                 );
                 broadcastTransctionPool();
-                res.send(newTransaciton);
+                //res.send(newTransaciton);
+                res.send({ newTransaciton, message: "success" });
             }
-            
         } catch (error) {
             res.status(400).send("Sending transaction faild");
         }
