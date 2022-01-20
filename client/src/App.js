@@ -20,7 +20,7 @@ function App() {
             <div className="main-contents-container">
                 <Routes>
                     <Route path="/">
-                        <Route index element={<Home />}></Route>
+                        <Route index element={<Blocks />}></Route>
                         <Route path="blocks" element={<Blocks />} />
                         <Route path="mempool" element={<Mempool />} />
                         <Route path="peer">
