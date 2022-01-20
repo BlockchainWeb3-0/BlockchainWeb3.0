@@ -142,6 +142,7 @@ const initHttpServer = (port: number) => {
 
                 // Transaction Pool도 갱신해야함
                 if (unspentTxOuts == null) {
+                    res.send("Invalid unspentTxOuts");
                     throw Error("Invalid unspentTxOuts");
                 }
                 const invalidTxs = [];
@@ -165,12 +166,13 @@ const initHttpServer = (port: number) => {
                     unspentTxOuts,
                     transactionPool
                 );
-                res.send("ok");
+                res.send("Mine Success");
             } else {
+                res.send("Invalid newUnspentTxOuts");
                 throw Error("Invalid newUnspentTxOuts.");
             }
         } else {
-            res.status(404).send("Invalid unspentTxOuts");
+            res.send("Invalid unspentTxOuts");
             throw Error("Invalid unspentTxOuts");
         }
     });
