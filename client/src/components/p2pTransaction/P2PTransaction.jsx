@@ -50,7 +50,7 @@ const P2PTransaction = ({ peer }) => {
         setPrivatekey(e.target.value);
     };
 	const textOnReceiverAddress = (e) => {
-		setReceiverAddress(parseInt(e.target.value));
+		setReceiverAddress(e.target.value);
 	};
 	const textOnAmount = (e) => {
 		setAmount(parseInt(e.target.value));
