@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Spinner } from "react-bootstrap";
+import PopupMsg from "../alert/PopupMsg";
 import Transaction from "./Transaction";
 
 const MempoolPeer = ({
@@ -10,10 +11,12 @@ const MempoolPeer = ({
     start,
     intervalId,
     address,
+    type,
+    text,
 }) => {
     return (
         <div className="mempool-peer">
-            <div style={{ marginBottom: 20 }}>
+            <div style={{ marginBottom: 20}}>
                 <Button variant="warning" onClick={handleOnClick}>
                     Mining {port}
                 </Button>
@@ -22,10 +25,13 @@ const MempoolPeer = ({
                         start(port, address, e);
                     }}
                     variant={intervalId ? "danger" : "primary"}
+                    style={{ marginLeft: 20}}
                 >
                     Auto Mining {intervalId ? "Stop" : "Start"}
                 </Button>
             </div>
+            <PopupMsg type={type} text={text} />
+            <br/>
             <div>
                 <h4>transaction List</h4>
                 {loading ? (
