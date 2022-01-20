@@ -40,7 +40,7 @@
 ## 4-2. 📚 Languages & Libraries
 ### Front-end
 - `React`
-- `Javascript`
+- `Typescript`
 ### Back-end
 - `NodeJS`
 - `MySQL`
