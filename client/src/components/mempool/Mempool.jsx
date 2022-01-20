@@ -4,7 +4,6 @@ import "./mempool.scss";
 import MempoolPeer from "./MempoolPeer";
 
 import _ from "lodash";
-import PopupMsg from "../alert/PopupMsg";
 import Test from "../alert/Test";
 
 const Mempool = () => {
@@ -31,15 +30,18 @@ const Mempool = () => {
 	const [miningMsg2, setMiningMsg2] = useState("Start Mining!");
 	const [miningStatus3, setMiningStatus3] = useState("info");
 	const [miningMsg3, setMiningMsg3] = useState("Start Mining!");
-
-	const [open, setOpen] = useState(false);
+	const [open1, setOpen1] = useState(false);
+	const [open2, setOpen2] = useState(false);
+	const [open3, setOpen3] = useState(false);
 
 	const handleClose = (event, reason) => {
 		if (reason === "clickaway") {
 			return;
 		}
 
-		setOpen(false);
+		setOpen1(false);
+		setOpen2(false);
+		setOpen3(false);
 	};
 
 	const txPool = async () => {
@@ -62,7 +64,7 @@ const Mempool = () => {
 		txPool();
 		txPool2();
 		txPool3();
-	}, []);
+	}, [open1, open2, open3]);
 
 	const getMiningParams = (port, addr) => {
 		return {
@@ -136,22 +138,26 @@ const Mempool = () => {
 			type = "info";
 		}
 		let text = status.data;
-
+		console.log(text);
+		console.log(type);
 		switch (port) {
 			case 3001:
 				setMiningStatus1(type);
 				setMiningMsg1(text);
+				setOpen1(true);
 				break;
 			case 3002:
 				setMiningStatus2(type);
 				setMiningMsg2(text);
+				setOpen2(true);
 				break;
 			case 3003:
 				setMiningStatus3(type);
 				setMiningMsg3(text);
+				setOpen3(true);
 				break;
 		}
-        setOpen(true);
+
 		// setTimeout(() => {
 		// 	window.location.reload();
 		// }, 500);
@@ -164,41 +170,63 @@ const Mempool = () => {
 				<h3>where to store Unconfirmed Transactions</h3>
 			</div>
 			<div className="mempool-peer-container">
-				<MempoolPeer
-					data={data}
-					port={3001}
-					handleOnClick={() => miningClick(3001, address1)}
-					loading={loading}
-					start={start1}
-					address={address1}
-					intervalId={intervalId1}
-					type={miningStatus1}
-					text={miningMsg1}
-				/>
-
-				<MempoolPeer
-					data={data2}
-					port={3002}
-					handleOnClick={() => miningClick(3002, address2)}
-					loading={loading2}
-					start={start2}
-					address={address2}
-					intervalId={intervalId2}
-					type={miningStatus2}
-					text={miningMsg2}
-				/>
-				<MempoolPeer
-					data={data3}
-					port={3003}
-					handleOnClick={() => miningClick(3003, address3)}
-					loading={loading3}
-					start={start3}
-					address={address3}
-					intervalId={intervalId3}
-					type={miningStatus3}
-					text={miningMsg3}
-				/>
-                <Test handleClose={handleClose} type={miningMsg1} text={miningMsg1} open={open}/>
+				<div className="mempool-peer-wrap">
+					<MempoolPeer
+						data={data}
+						port={3001}
+						handleOnClick={() => miningClick(3001, address1)}
+						loading={loading}
+						start={start1}
+						address={address1}
+						intervalId={intervalId1}
+						type={miningStatus1}
+						text={miningMsg1}
+					/>
+					<Test
+						handleClose={handleClose}
+						type={miningStatus1}
+						text={miningMsg1}
+						open={open1}
+					/>
+				</div>
+				<div className="mempool-peer-wrap">
+					<MempoolPeer
+						data={data2}
+						port={3002}
+						handleOnClick={() => miningClick(3002, address2)}
+						loading={loading2}
+						start={start2}
+						address={address2}
+						intervalId={intervalId2}
+						type={miningStatus2}
+						text={miningMsg2}
+					/>
+					<Test
+						handleClose={handleClose}
+						type={miningStatus2}
+						text={miningMsg2}
+						open={open2}
+					/>
+				</div>
+				<div className="mempool-peer-wrap">
+					<MempoolPeer
+						data={data3}
+						port={3003}
+						handleOnClick={() => miningClick(3003, address3)}
+						loading={loading3}
+						start={start3}
+						address={address3}
+						intervalId={intervalId3}
+						type={miningStatus3}
+						text={miningMsg3}
+					/>
+					<Test
+						handleClose={handleClose}
+						type={miningStatus3}
+						text={miningMsg3}
+						open={open3}
+					/>
+				</div>
 			</div>
 		</div>
 	);

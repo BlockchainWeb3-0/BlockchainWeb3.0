@@ -8,10 +8,14 @@
   .mempool-peer-container {
     display: flex;
     flex-direction: row;
+    .mempool-peer-wrap{
+      position: relative;
+    }
     .mempool-peer {
       padding: 15px;
       overflow-wrap: break-word;
-      width: 33%;
+      width: 100%;
+      
     }
   }
 }

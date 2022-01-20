@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Spinner } from "react-bootstrap";
+import { Dropdown, Spinner } from "react-bootstrap";
 import MyUTXO from "./MyUTXO";
 
 const Wallet = ({ address, balance }) => {
@@ -31,11 +31,13 @@ const Wallet = ({ address, balance }) => {
 
 	return (
 		<>
-			<h1>Wallet</h1>
+			<Dropdown.Divider />
 			<h2>Address</h2>
 			{walletAddress}
+			<Dropdown.Divider />
 			<h2>Balance</h2>
 			{walletBalance}
+			<Dropdown.Divider />
 			<h2>MyUTXOs</h2>
 			{loading ? (
 				<Spinner animation="border" variant="dark" />

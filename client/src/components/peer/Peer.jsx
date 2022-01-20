@@ -8,7 +8,9 @@ const Peer = () => {
     return (
         <div className="peers-container">
             <Peer1 />
+            <br/>
             <Peer2 />
+            <br/>
             <Peer3 />
         </div>
     );

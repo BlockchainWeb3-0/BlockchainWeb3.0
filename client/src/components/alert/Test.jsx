@@ -8,31 +8,32 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function Test() {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
+export default function Test({open, handleClose, type, text }) {
 
   return (
-    <Stack spacing={2} sx={{ width: "100%" }}>
-      <Button variant="outlined" onClick={handleClick}>
-        Open success snackbar
-      </Button>
-      <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
-          This is a success message!
-        </Alert>
-      </Snackbar>
-    </Stack>
-  );
+		<Stack
+			spacing={1}
+			sx={{ width: "100%" }}
+		>
+			<Snackbar
+				open={open}
+				autoHideDuration={2000}
+				onClose={(e) => {
+					handleClose(e);
+				}}
+        // anchorOrigin={{ vertical: "top", horizontal: "left" }}
+        sx={{position:"absolute", top:"30px"}}
+			>
+				<Alert
+					onClose={(e) => {
+						handleClose(e);
+					}}
+					severity={type}
+					sx={{ width: "100%" }}
+				>
+					{text}
+				</Alert>
+			</Snackbar>
+		</Stack>
+	);
 }

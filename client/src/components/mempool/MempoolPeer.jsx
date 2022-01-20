@@ -30,13 +30,15 @@ const MempoolPeer = ({
                     Auto Mining {intervalId ? "Stop" : "Start"}
                 </Button>
             </div>
-            <PopupMsg type={type} text={text} />
+            <br/>
+            <br/>
             <br/>
             <div>
                 <h4>transaction List</h4>
                 {loading ? (
                     <Spinner animation="border" variant="dark" />
                 ) : (
+                    data.length === 0 ? <h1>Empty</h1> :
                     data.map((tx, index) => (
                         <Transaction key={tx.id} tx={tx} index={index} />
                     ))
