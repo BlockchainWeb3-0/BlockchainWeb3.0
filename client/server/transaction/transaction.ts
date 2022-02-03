@@ -195,7 +195,7 @@ class TxFunctions {
      */
     static hasDuplicates = (txIns: TxIn[]): boolean => {
         // _.countBy(collection, [iteratee=_.identity]) : 배열 또는 객체에서 요소의 반복 횟수를 object 형식으로 반환
-        const groups = _.countBy(txIns, (txIn) => txIn.txOutId + txIn.txOutId);
+        const groups = _.countBy(txIns, (txIn) => txIn.txOutId + txIn.txOutIndex);
         return (
             _(groups)
                 .map((value, key) => {
