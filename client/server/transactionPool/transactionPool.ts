@@ -71,14 +71,15 @@ class TransactionPool {
     /**
      * updateTransactionPool
      * - 새로운 블록에 추가된 trasaction들을 transaction Pool에서 제거
-     * @param unspentTxOuts
+     * @param unspentTxOuts 새롭게 갱신된 utxos
      */
     static updateTransactionPool = (
         unspentTxOuts: UnspentTxOut[] | null,
         transactionPool: Transaction[]
     ) => {
-        // Transaction Pool에 있는 트랜잭션 중에
-        // UTXO에 있다면 이미 새로운 블록에 포함된 것으로 취급
+        // Transaction Pool에 있는 트랜잭션 중 txIns의 내용이
+        // 새로 갱신된 UTXO에서 온게 아니라면
+        // Transaction Pool 에서 제거
         if (unspentTxOuts == null) {
             throw Error("Invalid unspentTxOuts");
         }
